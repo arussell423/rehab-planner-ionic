@@ -5,6 +5,9 @@
     </ion-buttons>
     <ion-title>{{ categoryLabel() }}</ion-title>
     <ion-buttons slot="end">
+      <ion-button *ngIf="category() === 'pt_exercises'" (click)="openImport()" title="Import from file">
+        <ion-icon slot="icon-only" name="document-attach-outline"></ion-icon>
+      </ion-button>
       <ion-button (click)="openForm()">
         <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
       </ion-button>
@@ -15,8 +18,8 @@
 <ion-content class="ion-padding-bottom">
 
   <div *ngIf="activities().length === 0" class="empty-state">
-    <div class="empty-icon">🏃</div>
-    <div class="empty-text">No activities yet. Tap "+ Add" to create one.</div>
+    <ion-icon name="fitness-outline" class="empty-icon"></ion-icon>
+    <div class="empty-text">No activities yet. Tap + to add one.</div>
   </div>
 
   <div class="activity-item" *ngFor="let act of activities()" [class.completed]="act.completed">
@@ -69,6 +72,21 @@
             <input class="edit-input" type="number" min="1" [(ngModel)]="formReps" placeholder="—">
           </div>
         </div>
+        <div class="form-row" *ngIf="category() === 'strength'">
+          <div class="form-field weight-field">
+            <label>Weight</label>
+            <div class="weight-input-wrap">
+              <input class="edit-input" type="number" min="0" step="0.5"
+                [value]="formWeightDisplay ?? ''"
+                (input)="setWeightDisplay($any($event.target).value)"
+                placeholder="—">
+              <button class="unit-toggle-btn" (click)="toggleWeightUnit()">
+                {{ formWeightUnit === 'kg' ? 'KG → LBS' : 'LBS → KG' }}
+              </button>
+            </div>
+            <div class="weight-unit-label">Stored in kg · showing in {{ formWeightUnit.toUpperCase() }}</div>
+          </div>
+        </div>
         <div class="form-row">
           <div class="form-field">
             <label>Duration (min)</label>
@@ -90,6 +108,76 @@
           <textarea class="edit-input" [(ngModel)]="formNotes" placeholder="Optional notes..."></textarea>
         </div>
         <button class="btn btn-primary" style="width:100%;margin-top:16px" (click)="saveActivity()">Save Activity</button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  <!-- Import Modal (PT Exercises) -->
+  <ion-modal [isOpen]="showImport()" (ionModalDidDismiss)="showImport.set(false)"
+    [breakpoints]="[0,0.95]" [initialBreakpoint]="0.95">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Import Exercises</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="showImport.set(false)">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+
+        <!-- Upload area -->
+        <div class="import-upload-area">
+          <ion-icon name="cloud-upload-outline" class="upload-icon"></ion-icon>
+          <div class="upload-title">Upload your PT exercise file</div>
+          <div class="upload-sub">Accepted formats: .xlsx · .xls · .csv · .docx</div>
+          <label class="btn btn-primary import-file-btn">
+            Choose File
+            <input type="file" accept=".xlsx,.xls,.csv,.docx"
+              (change)="onImportFile($event)" style="display:none">
+          </label>
+        </div>
+
+        <!-- Format hint -->
+        <div class="import-hint">
+          <div class="hint-title">📋 Excel / CSV format (recommended)</div>
+          <div class="hint-row hint-header">Name | Sets | Reps | Duration | Weight | Notes</div>
+          <div class="hint-row">Squats | 3 | 10 | — | 60 | —</div>
+          <div class="hint-row">Hip Flexor Stretch | — | — | 2 | — | Hold each side</div>
+          <div class="hint-spacer"></div>
+          <div class="hint-title">📄 Word / Doc format</div>
+          <div class="hint-row">One exercise per line. Include sets×reps like "3x10" inline.</div>
+        </div>
+
+        <!-- Error -->
+        <div class="import-error" *ngIf="importError()">⚠️ {{ importError() }}</div>
+
+        <!-- Preview list -->
+        <div *ngIf="importedActivities().length > 0" class="import-preview">
+          <div class="preview-header">
+            {{ importedActivities().length }} exercise(s) ready to import
+          </div>
+          <div class="preview-item" *ngFor="let a of importedActivities(); let i = index">
+            <div class="preview-body">
+              <div class="preview-name">{{ a.name }}</div>
+              <div class="preview-chips" *ngIf="a.sets || a.reps || a.duration || a.weightLoad">
+                <span *ngIf="a.sets">{{ a.sets }} sets</span>
+                <span *ngIf="a.reps">{{ a.reps }} reps</span>
+                <span *ngIf="a.weightLoad">{{ a.weightLoad }} kg</span>
+                <span *ngIf="a.duration">{{ a.duration }} min</span>
+              </div>
+              <div class="preview-note" *ngIf="a.notes">{{ a.notes }}</div>
+            </div>
+            <button class="btn-del" (click)="removeImported(i)" aria-label="Remove">
+              <ion-icon name="close"></ion-icon>
+            </button>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:16px" (click)="confirmImport()">
+            Add All to {{ selectedDay() }}
+          </button>
+        </div>
+
       </ion-content>
     </ng-template>
   </ion-modal>

@@ -7,7 +7,8 @@ import {
   heart, body, bicycle, basketball, medkit, ellipsisHorizontal,
   moonOutline, sunnyOutline, trashOutline, pencilOutline, checkmark,
   arrowBack, timeOutline, repeatOutline, scaleOutline, fitnessOutline,
-  leafOutline, waterOutline, bedOutline, analyticsOutline, trophyOutline
+  leafOutline, waterOutline, bedOutline, analyticsOutline, trophyOutline,
+  documentAttachOutline, cloudUploadOutline
 } from 'ionicons/icons';
 import { ThemeService } from './services/theme.service';
 
@@ -25,7 +26,8 @@ export class App implements OnInit {
       heart, body, bicycle, basketball, medkit, ellipsisHorizontal,
       moonOutline, sunnyOutline, trashOutline, pencilOutline, checkmark,
       arrowBack, timeOutline, repeatOutline, scaleOutline, fitnessOutline,
-      leafOutline, waterOutline, bedOutline, analyticsOutline, trophyOutline
+      leafOutline, waterOutline, bedOutline, analyticsOutline, trophyOutline,
+      documentAttachOutline, cloudUploadOutline
     });
   }
   ngOnInit() { this.themeSvc.apply(); }
