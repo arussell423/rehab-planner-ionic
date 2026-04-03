@@ -79,7 +79,7 @@
       position: absolute;
       left: 5px; top: 2px;
       width: 8px; height: 12px;
-      border: 2.5px solid #0b0f14;
+      border: 2.5px solid #fff;
       border-top: none;
       border-left: none;
       transform: rotate(40deg);
@@ -189,7 +189,7 @@
   border-radius: calc(var(--rs) - 2px);
   font-size: 0.78rem; font-weight: 600; color: var(--text2); cursor: pointer;
   transition: all 0.15s;
-  &.active { background: var(--primary); color: #0b0f14; }
+  &.active { background: var(--primary); color: #fff; }
 }
 
 // Buttons
@@ -199,8 +199,8 @@
   gap: 8px; transition: all 0.15s;
 }
 .btn-primary {
-  background: var(--primary); color: #0b0f14;
-  &:hover { filter: brightness(1.1); }
+  background: var(--primary); color: #fff;
+  &:hover { filter: brightness(1.08); }
   &:active { transform: scale(0.98); }
 }
 .btn-secondary {
@@ -235,7 +235,7 @@
   background: var(--card-2); border: 1px solid var(--border); padding: 7px 14px;
   border-radius: 20px; font-size: 0.78rem; font-weight: 600; cursor: pointer; color: var(--text2);
   transition: all 0.15s;
-  &.active { background: var(--primary); color: #0b0f14; border-color: var(--primary); }
+  &.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 }
 
 // Empty states
@@ -274,7 +274,7 @@
   flex: 1; border: 1px solid var(--border); background: var(--card-2);
   padding: 8px 6px; border-radius: var(--r-sm); font-size: 0.78rem; font-weight: 600;
   color: var(--text2); cursor: pointer; transition: all 0.15s; text-align: center;
-  &.active { background: var(--primary); color: #0b0f14; border-color: var(--primary); }
+  &.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 }
 
 // Edit input

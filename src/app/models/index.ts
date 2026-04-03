@@ -2,7 +2,7 @@ export interface Profile {
   id: string;
   name: string;
   emoji: string;
-  theme: 'teal' | 'blue' | 'green' | 'purple' | 'rose' | 'orange';
+  theme: 'sage' | 'teal' | 'blue' | 'green' | 'purple' | 'rose' | 'orange';
   appName: string;
 }
 
