@@ -4,6 +4,7 @@ import { NgIf } from '@angular/common';
 import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { ScheduleService } from '../../services/schedule.service';
 import { ProfileService } from '../../services/profile.service';
+import { ThemeService } from '../../services/theme.service';
 import { Profile } from '../../models';
 
 @Component({
@@ -23,7 +24,12 @@ export class DashboardPage implements OnInit {
   totalCount = signal<number>(0);
   profile = signal<Profile | null>(null);
 
-  constructor(private router: Router, private schedSvc: ScheduleService, private profileSvc: ProfileService) {}
+  constructor(
+    private router: Router,
+    private schedSvc: ScheduleService,
+    private profileSvc: ProfileService,
+    public themeSvc: ThemeService
+  ) {}
 
   ngOnInit() { this.load(); }
   ionViewWillEnter() { this.load(); }
@@ -56,4 +62,6 @@ export class DashboardPage implements OnInit {
   get isToday() { return this.selectedDay() === this.today(); }
 
   goTo(path: string) { this.router.navigate([path]); }
+
+  toggleDark() { this.themeSvc.toggleDark(); }
 }

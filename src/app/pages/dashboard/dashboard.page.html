@@ -4,6 +4,9 @@
       <img src="logo-toolbar-white.png" alt="ART — Train Smart Recover Strong" class="brand-logo">
     </div>
     <ion-buttons slot="end">
+      <ion-button (click)="toggleDark()" class="theme-toggle-btn" aria-label="Toggle dark mode">
+        <ion-icon slot="icon-only" [name]="themeSvc.isDark() ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+      </ion-button>
       <ion-button (click)="goTo('/settings')">
         <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
       </ion-button>

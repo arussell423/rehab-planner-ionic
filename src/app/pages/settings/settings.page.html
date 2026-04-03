@@ -21,12 +21,11 @@
         [style.background]="themeColor(t)"
         (click)="setTheme(t)">✓</div>
     </div>
-    <div class="dark-toggle" style="margin-top:12px">
-      <span>Dark Mode</span>
-      <div class="toggle-switch" [class.active]="isDark()" (click)="toggleDark()">
-        <div class="toggle-knob"></div>
-      </div>
-    </div>
+    <ion-item lines="none" class="dark-mode-item">
+      <ion-icon name="moon-outline" slot="start" class="mode-icon"></ion-icon>
+      <ion-label>Dark Mode</ion-label>
+      <ion-toggle slot="end" [checked]="isDark()" (ionChange)="toggleDark()" color="primary"></ion-toggle>
+    </ion-item>
   </div>
 
   <!-- Profiles -->

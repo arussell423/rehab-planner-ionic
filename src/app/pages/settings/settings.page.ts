@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonToggle, IonItem, IonLabel, IonIcon } from '@ionic/angular/standalone';
 import { ScheduleService } from '../../services/schedule.service';
 import { ProfileService } from '../../services/profile.service';
 import { ThemeService } from '../../services/theme.service';
@@ -14,7 +14,7 @@ import { ProfileModalComponent } from '../../components/profile-modal/profile-mo
   templateUrl: './settings.page.html',
   styleUrls: ['./settings.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, NgFor, NgIf, FormsModule, ProfileModalComponent]
+  imports: [IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonToggle, IonItem, IonLabel, IonIcon, NgFor, NgIf, FormsModule, ProfileModalComponent]
 })
 export class SettingsPage implements OnInit {
   profiles = signal<Profile[]>([]);
@@ -144,7 +144,10 @@ export class SettingsPage implements OnInit {
   }
 
   themeColor(t: string): string {
-    const map: Record<string, string> = { blue:'#2563eb', green:'#16a34a', purple:'#7c3aed', rose:'#e11d48', orange:'#ea580c' };
-    return map[t] || '#2563eb';
+    const map: Record<string, string> = {
+      blue: '#2563eb', green: '#16a34a', purple: '#7c3aed',
+      rose: '#e11d48', orange: '#ea580c', sage: '#6b9955'
+    };
+    return map[t] || '#6b9955';
   }
 }
