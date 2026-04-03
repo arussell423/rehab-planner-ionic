@@ -1,16 +1,21 @@
 <ion-content class="ion-padding-bottom">
 
-  <!-- Day Header -->
-  <div class="day-header" [class.rest]="todaySchedule()?.rest">
-    <div class="dh-info">
-      <h2>{{ today() }}</h2>
-      <div class="sub" *ngIf="!todaySchedule()?.rest">
-        {{ doneCount() }} of {{ totalCount() }} activities completed
+  <!-- Day Navigator -->
+  <div class="day-nav">
+    <button class="nav-btn" (click)="navigateDay(-1)" aria-label="Previous day">&#8249;</button>
+    <div class="day-nav-center">
+      <div class="day-name">{{ selectedDay() }}<span class="today-chip" *ngIf="isToday">Today</span></div>
+      <div class="day-sub" *ngIf="!todaySchedule()?.rest">
+        {{ doneCount() }}/{{ totalCount() }} completed &nbsp;·&nbsp; {{ donePct() }}%
       </div>
-      <div class="sub" *ngIf="todaySchedule()?.rest">Rest &amp; Recovery Day</div>
+      <div class="day-sub" *ngIf="todaySchedule()?.rest">Rest &amp; Recovery</div>
     </div>
-    <div class="dh-badge" *ngIf="!todaySchedule()?.rest">{{ donePct() }}%</div>
-    <div class="dh-badge" *ngIf="todaySchedule()?.rest">🛌 Rest</div>
+    <button class="nav-btn" (click)="navigateDay(1)" aria-label="Next day">&#8250;</button>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress-strip" *ngIf="!todaySchedule()?.rest">
+    <div class="progress-fill" [style.width.%]="donePct()"></div>
   </div>
 
   <!-- Rest Day Quote -->
@@ -19,32 +24,42 @@
   <!-- Activities -->
   <div class="card" *ngIf="!todaySchedule()?.rest">
     <div class="card-header">
-      <div class="card-title">📋 Activities</div>
+      <div class="card-title">Activities</div>
       <div class="card-actions">
-        <button class="btn-icon" (click)="currentSlot.set('morning'); showTemplateSheet.set(true)" title="Add from templates">➕</button>
-        <button class="btn-icon" (click)="showCopySheet.set(true)" title="Copy day">📋</button>
+        <button class="icon-btn" (click)="currentSlot.set('morning'); showTemplateSheet.set(true)" title="Add from templates">
+          <span class="icon-btn-inner">+</span>
+        </button>
+        <button class="icon-btn" (click)="showCopySheet.set(true)" title="Copy to other days">
+          <span class="icon-btn-inner">⎘</span>
+        </button>
       </div>
     </div>
 
     <div *ngFor="let slot of ['morning','afternoon','evening']">
       <div class="act-section" *ngIf="getSlot(todaySchedule()!, slot).length > 0">
         <div class="section-label">
-          {{ slot === 'morning' ? '🌅 Morning' : slot === 'afternoon' ? '☀️ Afternoon' : '🌙 Evening' }}
+          {{ slot === 'morning' ? 'Morning' : slot === 'afternoon' ? 'Afternoon' : 'Evening' }}
         </div>
-        <div class="activity-item" *ngFor="let act of getSlot(todaySchedule()!, slot); let i = index">
+        <div class="activity-item" *ngFor="let act of getSlot(todaySchedule()!, slot); let i = index"
+          [class.completed]="isActivityDone(activityKey(selectedDay(), slot, i))">
           <input type="checkbox" class="act-checkbox"
-            [checked]="isActivityDone(activityKey(today(), slot, i))"
-            (change)="toggleActivity(activityKey(today(), slot, i), $any($event.target).checked)">
-          <span class="act-label" [class.done]="isActivityDone(activityKey(today(), slot, i))">{{ act }}</span>
-          <button class="btn-del" (click)="deleteActivity(slot, i)">🗑</button>
+            [checked]="isActivityDone(activityKey(selectedDay(), slot, i))"
+            (change)="toggleActivity(activityKey(selectedDay(), slot, i), $any($event.target).checked)">
+          <span class="act-label" [class.done]="isActivityDone(activityKey(selectedDay(), slot, i))">{{ act }}</span>
+          <button class="btn-del" (click)="deleteActivity(slot, i)" aria-label="Delete">✕</button>
         </div>
       </div>
+    </div>
+
+    <div class="empty-activities" *ngIf="totalCount() === 0">
+      <div class="empty-icon">○</div>
+      <p>No activities scheduled. Tap + to add some.</p>
     </div>
   </div>
 
   <!-- Metrics Card -->
   <div class="card">
-    <div class="card-header"><div class="card-title">📊 Daily Metrics</div></div>
+    <div class="card-header"><div class="card-title">Daily Metrics</div></div>
 
     <div class="metrics-grid">
       <div class="metric-input">
@@ -79,11 +94,10 @@
 
     <!-- Pain Slider -->
     <div class="pain-slider">
-      <label>Pain Level (0-10)</label>
+      <label>Pain Level &nbsp;<span class="pain-val">{{ dayData()?.pain || 0 }}/10 {{ painEmoji }}</span></label>
       <div class="pain-track">
         <input type="range" min="0" max="10" [value]="dayData()?.pain || 0"
           (input)="setPain(+$any($event.target).value)">
-        <span class="pain-emoji">{{ painEmoji }}</span>
       </div>
     </div>
 
@@ -102,7 +116,7 @@
 
     <!-- Medications -->
     <div class="meds-check" *ngIf="medications().length">
-      <label>💊 Medications</label>
+      <label>Medications</label>
       <div class="med-item" *ngFor="let med of medications()">
         <input type="checkbox" [checked]="dayData()?.meds?.[med]"
           (change)="saveMed(med, $any($event.target).checked)">
@@ -122,7 +136,7 @@
       <div class="stars">
         <span *ngFor="let filled of stars(dayData()?.sleep || 0); let i = index"
           class="star" [class.filled]="filled"
-          (click)="setSleepQuality(i+1)">⭐</span>
+          (click)="setSleepQuality(i+1)">★</span>
       </div>
     </div>
 
@@ -181,7 +195,7 @@
       </ion-header>
       <ion-content class="ion-padding">
         <div *ngFor="let day of allDays">
-          <div class="day-checkbox" *ngIf="day !== today()">
+          <div class="day-checkbox" *ngIf="day !== selectedDay()">
             <input type="checkbox" [id]="'copy-'+day"
               (change)="setCopyTarget(day, $any($event.target).checked)">
             <label [for]="'copy-'+day">{{ day }}</label>

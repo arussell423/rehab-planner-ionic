@@ -1,0 +1,104 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>RehabPlanner</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="goTo('/settings')">
+        <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-bottom">
+
+  <!-- Day navigator -->
+  <div class="day-nav">
+    <button class="nav-btn" (click)="navigateDay(-1)">
+      <ion-icon name="chevron-back"></ion-icon>
+    </button>
+    <div class="day-nav-center">
+      <div class="day-name">{{ selectedDay() }}<span class="today-chip" *ngIf="isToday">Today</span></div>
+    </div>
+    <button class="nav-btn" (click)="navigateDay(1)">
+      <ion-icon name="chevron-forward"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Hero ring + stats -->
+  <div class="hero-section">
+    <div class="ring-wrap">
+      <svg viewBox="0 0 120 120" class="ring-svg">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="var(--border)" stroke-width="10"/>
+        <circle cx="60" cy="60" r="50" fill="none" stroke="var(--primary)" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="314"
+          [attr.stroke-dashoffset]="314 - (314 * donePct() / 100)"
+          transform="rotate(-90 60 60)"
+          style="transition: stroke-dashoffset 0.6s cubic-bezier(0.4,0,0.2,1)"/>
+      </svg>
+      <div class="ring-inner">
+        <div class="ring-pct">{{ donePct() }}%</div>
+        <div class="ring-sub">done</div>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hstat">
+        <ion-icon name="trophy-outline" class="hstat-icon"></ion-icon>
+        <div class="hstat-val">{{ streak() }}</div>
+        <div class="hstat-label">Day Streak</div>
+      </div>
+      <div class="hstat">
+        <ion-icon name="checkmark-circle" class="hstat-icon"></ion-icon>
+        <div class="hstat-val">{{ doneCount() }}/{{ totalCount() }}</div>
+        <div class="hstat-label">Activities</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation cards -->
+  <div class="nav-card" (click)="goTo('/activities')">
+    <div class="nav-card-icon-wrap accent-teal">
+      <ion-icon name="barbell"></ion-icon>
+    </div>
+    <div class="nav-card-info">
+      <div class="nav-card-title">Activities</div>
+      <div class="nav-card-sub">Strength · Cardio · Mobility · PT</div>
+    </div>
+    <ion-icon name="chevron-forward" class="nav-arrow"></ion-icon>
+  </div>
+
+  <div class="nav-card" (click)="goTo('/metrics')">
+    <div class="nav-card-icon-wrap accent-blue">
+      <ion-icon name="analytics-outline"></ion-icon>
+    </div>
+    <div class="nav-card-info">
+      <div class="nav-card-title">Daily Metrics</div>
+      <div class="nav-card-sub">Steps · Calories · Sleep · Pain</div>
+    </div>
+    <ion-icon name="chevron-forward" class="nav-arrow"></ion-icon>
+  </div>
+
+  <div class="nav-card" (click)="goTo('/progress')">
+    <div class="nav-card-icon-wrap accent-orange">
+      <ion-icon name="flame"></ion-icon>
+    </div>
+    <div class="nav-card-info">
+      <div class="nav-card-title">Progress</div>
+      <div class="nav-card-sub">Streak · Weekly charts</div>
+    </div>
+    <ion-icon name="chevron-forward" class="nav-arrow"></ion-icon>
+  </div>
+
+  <div class="nav-card" (click)="goTo('/history')">
+    <div class="nav-card-icon-wrap accent-purple">
+      <ion-icon name="calendar-outline"></ion-icon>
+    </div>
+    <div class="nav-card-info">
+      <div class="nav-card-title">History</div>
+      <div class="nav-card-sub">8-week trends</div>
+    </div>
+    <ion-icon name="chevron-forward" class="nav-arrow"></ion-icon>
+  </div>
+
+</ion-content>

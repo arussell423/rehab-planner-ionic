@@ -6,6 +6,7 @@
   background: var(--card);
   border-bottom: 1px solid var(--border);
   scrollbar-width: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   &::-webkit-scrollbar { display: none; }
 }
 
@@ -13,42 +14,43 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
+  padding: 6px 14px;
   border-radius: 20px;
-  border: 2px solid var(--border);
-  background: var(--bg);
-  font-size: 0.85rem;
+  border: 1.5px solid var(--border);
+  background: var(--card-2);
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--text);
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s;
+  transition: all 0.2s var(--ease);
+  box-shadow: var(--shadow-sm);
 
+  &:hover { border-color: var(--primary-m); background: var(--primary-l); }
   &.active {
-    background: var(--primary);
+    background: var(--grd, var(--primary));
     color: #fff;
-    border-color: var(--primary);
+    border-color: transparent;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary) 35%, transparent);
   }
 }
 
-.tab-icon {
-  font-size: 1.4rem;
-  line-height: 1;
-}
+.tab-icon { font-size: 1.35rem; line-height: 1; }
 
 ion-tab-bar {
   --background: var(--card);
-  --border: 1px solid var(--border);
-  height: 60px;
+  height: 64px;
 }
 
 ion-tab-button {
   --color: var(--muted);
   --color-selected: var(--primary);
-  ion-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.3px; }
+  ion-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.2px; }
 }
 
 ion-toolbar {
-  --background: var(--primary);
+  --background: var(--grd, var(--primary));
   --color: #fff;
+  --border-width: 0;
 }
+

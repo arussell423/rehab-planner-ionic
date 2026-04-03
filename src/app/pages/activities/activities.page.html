@@ -1,0 +1,21 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Activities</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-bottom">
+  <div class="cat-card" *ngFor="let cat of categories" (click)="goToCategory(cat.id)">
+    <div class="cat-icon-wrap">
+      <ion-icon [name]="cat.icon"></ion-icon>
+    </div>
+    <div class="cat-info">
+      <div class="cat-title">{{ cat.label }}</div>
+      <div class="cat-sub">{{ cat.sub }}</div>
+    </div>
+    <ion-icon name="chevron-forward" class="cat-arrow"></ion-icon>
+  </div>
+</ion-content>

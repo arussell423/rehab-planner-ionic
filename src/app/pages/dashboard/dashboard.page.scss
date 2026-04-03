@@ -1,0 +1,136 @@
+@use '../../styles/shared' as *;
+
+.day-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 4px 20px;
+}
+
+.nav-btn {
+  width: 36px; height: 36px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 50%;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+  &:hover { border-color: var(--primary); color: var(--primary); }
+
+  ion-icon { font-size: 1.1rem; }
+}
+
+.day-nav-center { flex: 1; text-align: center; }
+
+.day-name {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em;
+  color: var(--text);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+
+.today-chip {
+  font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+  background: var(--primary); color: #0b0f14;
+  padding: 2px 7px; border-radius: 20px; letter-spacing: 0.6px;
+}
+
+// Hero section: ring + stats side by side
+.hero-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 20px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+}
+
+.ring-wrap {
+  position: relative;
+  width: 110px; height: 110px;
+  flex-shrink: 0;
+}
+
+.ring-svg {
+  width: 100%; height: 100%;
+}
+
+.ring-inner {
+  position: absolute;
+  inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+
+.ring-pct {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 1.5rem; font-weight: 800; color: var(--text);
+  line-height: 1;
+}
+
+.ring-sub { font-size: 0.68rem; color: var(--text2); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.hero-stats {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hstat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hstat-icon {
+  font-size: 1.1rem;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.hstat-val {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 1.25rem; font-weight: 800; color: var(--text);
+}
+
+.hstat-label {
+  font-size: 0.72rem; color: var(--text2);
+  margin-left: 2px;
+}
+
+// Nav cards
+.nav-card {
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: border-color 0.15s, background 0.15s;
+  &:hover { border-color: var(--primary-m); background: var(--card-2); }
+  &:active { transform: scale(0.99); }
+}
+
+.nav-card-icon-wrap {
+  width: 42px; height: 42px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  ion-icon { font-size: 1.3rem; }
+}
+
+.accent-teal   { background: rgba(6,214,160,0.15); color: #06d6a0; }
+.accent-blue   { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.accent-orange { background: rgba(251,146,60,0.15); color: #fb923c; }
+.accent-purple { background: rgba(167,139,250,0.15); color: #a78bfa; }
+
+.nav-card-info { flex: 1; }
+.nav-card-title { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+.nav-card-sub { font-size: 0.75rem; color: var(--text2); margin-top: 2px; }
+
+.nav-arrow { font-size: 1rem; color: var(--muted); }

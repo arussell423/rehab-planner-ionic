@@ -1,0 +1,109 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Daily Metrics — {{ selectedDay() }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-bottom">
+  <div class="card">
+    <div class="card-header"><div class="card-title">Steps &amp; Calories</div></div>
+    <div class="metrics-grid">
+      <div class="metric-input">
+        <label>Steps</label>
+        <input type="number" [value]="dayData()?.steps" (change)="saveField('steps', $any($event.target).value)"
+          [placeholder]="stepGoal()" min="0" max="99999">
+      </div>
+      <div class="metric-input">
+        <label>Calories</label>
+        <input type="number" [value]="dayData()?.calories" (change)="saveField('calories', $any($event.target).value)"
+          [placeholder]="calGoal()" min="0" max="9999">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">Macros</div></div>
+    <div class="macros-grid">
+      <div class="metric-input">
+        <label>Carbs (g)</label>
+        <input type="number" [value]="dayData()?.carbs" (change)="saveField('carbs', $any($event.target).value)" placeholder="150" min="0" max="999">
+      </div>
+      <div class="metric-input">
+        <label>Protein (g)</label>
+        <input type="number" [value]="dayData()?.protein" (change)="saveField('protein', $any($event.target).value)" placeholder="80" min="0" max="999">
+      </div>
+      <div class="metric-input">
+        <label>Fat (g)</label>
+        <input type="number" [value]="dayData()?.fat" (change)="saveField('fat', $any($event.target).value)" placeholder="40" min="0" max="999">
+      </div>
+    </div>
+    <div *ngIf="macroSvg()" style="margin-top:12px" [innerHTML]="macroSvg()"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">Pain &amp; Body</div></div>
+    <div class="pain-slider">
+      <label>Pain Level &nbsp;<span class="pain-val">{{ dayData()?.pain || 0 }}/10 {{ painEmoji }}</span></label>
+      <div class="pain-track">
+        <input type="range" min="0" max="10" [value]="dayData()?.pain || 0"
+          (input)="setPain(+$any($event.target).value)">
+      </div>
+    </div>
+    <div class="metric-input" style="margin-top:14px">
+      <label>Body Weight</label>
+      <div style="display:flex;gap:8px">
+        <input type="number" [value]="dayData()?.weight" (change)="saveField('weight', $any($event.target).value)"
+          placeholder="70" min="0.1" max="700" step="0.1" style="flex:1">
+        <div class="weight-unit-toggle">
+          <button class="unit-btn" [class.active]="weightUnit()==='kg'" (click)="setWeightUnit('kg')">kg</button>
+          <button class="unit-btn" [class.active]="weightUnit()==='lbs'" (click)="setWeightUnit('lbs')">lbs</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="medications().length">
+    <div class="card-header"><div class="card-title">Medications</div></div>
+    <div class="meds-check">
+      <div class="med-item" *ngFor="let med of medications()">
+        <input type="checkbox" [checked]="dayData()?.meds?.[med]"
+          (change)="saveMed(med, $any($event.target).checked)">
+        <span>{{ med }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">Sleep</div></div>
+    <div class="metric-input">
+      <label>Sleep Hours</label>
+      <input type="number" [value]="dayData()?.sleepHrs" (change)="saveField('sleepHrs', $any($event.target).value)"
+        placeholder="7.5" min="0" max="24" step="0.5">
+    </div>
+    <div class="sleep-rating">
+      <label>Sleep Quality</label>
+      <div class="stars">
+        <span *ngFor="let filled of stars(dayData()?.sleep || 0); let i = index"
+          class="star" [class.filled]="filled"
+          (click)="setSleepQuality(i+1)">★</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">Notes</div></div>
+    <div class="metric-input">
+      <label>Personal Notes</label>
+      <textarea [value]="dayData()?.notes || ''" (change)="saveField('notes', $any($event.target).value)"
+        placeholder="How are you feeling today?"></textarea>
+    </div>
+    <div class="metric-input">
+      <label>Therapist Notes</label>
+      <textarea [value]="dayData()?.therapistNotes || ''" (change)="saveField('therapistNotes', $any($event.target).value)"
+        placeholder="Notes from your therapist or doctor..."></textarea>
+    </div>
+  </div>
+</ion-content>

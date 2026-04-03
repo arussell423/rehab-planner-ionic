@@ -5,18 +5,23 @@ import { Theme } from '../constants';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
-  isDark = signal<boolean>(false);
-  currentTheme = signal<Theme>('blue');
+  isDark = signal<boolean>(true);
+  currentTheme = signal<Theme>('teal');
 
   constructor(private storage: StorageService, private profileService: ProfileService) {}
 
   apply(): void {
-    const dark = this.storage.get('rp_dark_mode') === 'true';
+    const light = this.storage.get('rp_dark_mode') === 'false';
     const profile = this.profileService.getActiveProfile();
-    this.isDark.set(dark);
-    this.currentTheme.set(profile.theme);
-    document.documentElement.setAttribute('data-theme', profile.theme);
-    document.documentElement.setAttribute('data-dark', String(dark));
+    const theme = profile.theme || 'teal';
+    this.isDark.set(!light);
+    this.currentTheme.set(theme as Theme);
+    document.documentElement.setAttribute('data-theme', theme);
+    if (light) {
+      document.documentElement.setAttribute('data-light', 'true');
+    } else {
+      document.documentElement.removeAttribute('data-light');
+    }
   }
 
   setTheme(theme: Theme): void {
@@ -26,9 +31,14 @@ export class ThemeService {
   }
 
   toggleDark(): void {
-    const dark = this.storage.get('rp_dark_mode') !== 'true';
-    this.storage.set('rp_dark_mode', String(dark));
-    this.isDark.set(dark);
-    document.documentElement.setAttribute('data-dark', String(dark));
+    const wasLight = this.storage.get('rp_dark_mode') === 'false';
+    const nowLight = !wasLight;
+    this.storage.set('rp_dark_mode', nowLight ? 'false' : 'true');
+    this.isDark.set(!nowLight);
+    if (nowLight) {
+      document.documentElement.setAttribute('data-light', 'true');
+    } else {
+      document.documentElement.removeAttribute('data-light');
+    }
   }
 }

@@ -4,11 +4,39 @@
   background: linear-gradient(135deg, #f59e0b, #ea580c);
   color: #fff;
   border-radius: var(--r);
-  padding: 20px;
+  padding: 24px 20px;
   text-align: center;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 20px rgba(234, 88, 12, 0.35);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.15) 0%, transparent 60%);
+  }
 }
-.streak-emoji { font-size: 3rem; margin-bottom: 8px; }
-.streak-val { font-size: 2.5rem; font-weight: 700; }
-.streak-label { font-size: 0.9rem; opacity: 0.9; margin-top: 4px; }
-.streak-best { font-size: 0.8rem; opacity: 0.8; margin-top: 8px; }
+
+.streak-emoji {
+  font-size: 3rem;
+  margin-bottom: 8px;
+  display: block;
+  animation: flamePulse 2s ease-in-out infinite;
+}
+
+@keyframes flamePulse {
+  0%, 100% { transform: scale(1) rotate(-3deg); }
+  50%       { transform: scale(1.12) rotate(3deg); }
+}
+
+.streak-val {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  display: block;
+}
+.streak-label { font-size: 0.9rem; opacity: 0.9; margin-top: 4px; font-weight: 600; }
+.streak-best { font-size: 0.8rem; opacity: 0.75; margin-top: 10px; }

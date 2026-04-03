@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from './storage.service';
 import { ProfileService } from './profile.service';
-import { DaySchedule, DayData, WeekData, StreakResult, PersonalRecords, HistoryPoint } from '../models';
+import { DaySchedule, DayData, WeekData, StreakResult, PersonalRecords, HistoryPoint, Activity } from '../models';
 import { DEFAULT_SCHEDULE } from '../constants';
 
 @Injectable({ providedIn: 'root' })
@@ -227,6 +227,35 @@ export class ScheduleService {
   clearWeekData(): void {
     const mon = this.getMondayOfWeek(new Date());
     this.storage.setJson(this.profile.weekDataKey(mon), {});
+  }
+
+  calcStreak(): number {
+    return this.getStreak().current;
+  }
+
+  addStructuredActivity(dayName: string, activity: Activity): void {
+    const schedule = this.getSchedule();
+    const dayIdx = schedule.findIndex(s => s.day === dayName);
+    if (dayIdx === -1) return;
+    const day = { ...schedule[dayIdx] };
+    day.activities = [...(day.activities || []), activity];
+    (day as any)[activity.timeOfDay] = [...((day as any)[activity.timeOfDay] || []), activity.name];
+    schedule[dayIdx] = day;
+    this.saveSchedule(schedule);
+  }
+
+  removeStructuredActivity(dayName: string, activityId: string): void {
+    const schedule = this.getSchedule();
+    const dayIdx = schedule.findIndex(s => s.day === dayName);
+    if (dayIdx === -1) return;
+    const day = { ...schedule[dayIdx] };
+    const removed = (day.activities || []).find(a => a.id === activityId);
+    day.activities = (day.activities || []).filter(a => a.id !== activityId);
+    if (removed) {
+      (day as any)[removed.timeOfDay] = ((day as any)[removed.timeOfDay] || []).filter((n: string) => n !== removed.name);
+    }
+    schedule[dayIdx] = day;
+    this.saveSchedule(schedule);
   }
 
   svgLineChart(dataPoints: number[], labels: string[], color: string, width = 350, height = 220): string {

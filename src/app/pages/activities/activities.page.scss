@@ -1,0 +1,27 @@
+@use '../../styles/shared' as *;
+
+.cat-card {
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: border-color 0.15s;
+  &:hover { border-color: var(--primary-m); }
+  &:active { transform: scale(0.99); }
+}
+
+.cat-icon-wrap {
+  width: 42px; height: 42px; border-radius: 12px;
+  background: var(--primary-l); color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  ion-icon { font-size: 1.4rem; }
+}
+
+.cat-info { flex: 1; }
+.cat-title { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+.cat-sub { font-size: 0.75rem; color: var(--text2); margin-top: 2px; }
+.cat-arrow { font-size: 1rem; color: var(--muted); }

@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton } from '@ionic/angular/standalone';
 import { ScheduleService } from '../../services/schedule.service';
 import { ProfileService } from '../../services/profile.service';
 import { ThemeService } from '../../services/theme.service';
@@ -14,7 +14,7 @@ import { ProfileModalComponent } from '../../components/profile-modal/profile-mo
   templateUrl: './settings.page.html',
   styleUrls: ['./settings.page.scss'],
   standalone: true,
-  imports: [IonContent, NgFor, NgIf, FormsModule, ProfileModalComponent]
+  imports: [IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, NgFor, NgIf, FormsModule, ProfileModalComponent]
 })
 export class SettingsPage implements OnInit {
   profiles = signal<Profile[]>([]);

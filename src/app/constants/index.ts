@@ -34,7 +34,7 @@ export const TEMPLATES: Record<string, string[]> = {
 
 export const PAIN_EMOJIS = ['😊','🙂','😐','😕','😟','😣','😖','😫','😩','🤯','💀'];
 export const AVATAR_EMOJIS = ['🧑‍⚕️','👤','💪','🏃','🧘','🏊','🚴','🤸','👩','👨','🦸','⭐','🌟','💫','🎯','🏆'];
-export const THEMES = ['blue', 'green', 'purple', 'rose', 'orange'] as const;
+export const THEMES = ['teal', 'blue', 'green', 'purple', 'rose', 'orange'] as const;
 export type Theme = typeof THEMES[number];
 
 export const CHART_COLORS: Record<string, string> = {

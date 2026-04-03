@@ -3,47 +3,125 @@
 @import '@ionic/angular/css/structure.css';
 @import '@ionic/angular/css/typography.css';
 
+// ─── Design Tokens — Dark FITR/Whoop default ──────────────────
 :root {
-  --bg: #f8fafc; --card: #fff; --border: #e2e8f0; --text: #1e293b;
-  --text2: #475569; --muted: #94a3b8;
-  --success: #16a34a; --warn: #d97706; --danger: #dc2626; --rest: #6366f1;
-  --r: 12px; --rs: 8px;
+  // Dark surfaces
+  --bg:      #0b0f14;
+  --card:    #141b24;
+  --card-2:  #1a2533;
+  --border:  #253347;
+
+  // Text
+  --text:    #e8f0fe;
+  --text2:   #7a8fa6;
+  --muted:   #3d5169;
+
+  // Semantic
+  --success: #06d6a0;
+  --warn:    #ffd166;
+  --danger:  #ef4444;
+  --rest:    #8b5cf6;
+
+  // Shape
+  --r:       14px;
+  --rs:      10px;
+  --r-sm:    8px;
+
+  // Shadows (subtler on dark)
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.3);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4);
+
+  // Transitions
+  --ease:       cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 0.2s var(--ease);
 }
 
-[data-theme="blue"]   { --primary: #2563eb; --primary-d: #1d4ed8; --primary-l: #dbeafe; }
-[data-theme="green"]  { --primary: #16a34a; --primary-d: #15803d; --primary-l: #dcfce7; }
-[data-theme="purple"] { --primary: #7c3aed; --primary-d: #6d28d9; --primary-l: #ede9fe; }
-[data-theme="rose"]   { --primary: #e11d48; --primary-d: #be123c; --primary-l: #ffe4e6; }
-[data-theme="orange"] { --primary: #ea580c; --primary-d: #c2410c; --primary-l: #ffedd5; }
-
-[data-dark="true"] {
-  --bg: #0f172a; --card: #1e293b; --border: #334155;
-  --text: #f1f5f9; --text2: #94a3b8; --muted: #475569;
+// ─── Themes ──────────────────────────────────────────────────
+[data-theme="teal"], :root {
+  --primary:   #06d6a0;
+  --primary-d: #05b888;
+  --primary-l: rgba(6,214,160,0.12);
+  --primary-m: rgba(6,214,160,0.25);
 }
-[data-dark="true"][data-theme="blue"]   { --primary-l: #1e3a8a; }
-[data-dark="true"][data-theme="green"]  { --primary-l: #14532d; }
-[data-dark="true"][data-theme="purple"] { --primary-l: #4c1d95; }
-[data-dark="true"][data-theme="rose"]   { --primary-l: #881337; }
-[data-dark="true"][data-theme="orange"] { --primary-l: #7c2d12; }
+[data-theme="blue"] {
+  --primary:   #3b82f6;
+  --primary-d: #2563eb;
+  --primary-l: rgba(59,130,246,0.12);
+  --primary-m: rgba(59,130,246,0.25);
+}
+[data-theme="purple"] {
+  --primary:   #a78bfa;
+  --primary-d: #7c3aed;
+  --primary-l: rgba(167,139,250,0.12);
+  --primary-m: rgba(167,139,250,0.25);
+}
+[data-theme="rose"] {
+  --primary:   #fb7185;
+  --primary-d: #e11d48;
+  --primary-l: rgba(251,113,133,0.12);
+  --primary-m: rgba(251,113,133,0.25);
+}
+[data-theme="orange"] {
+  --primary:   #fb923c;
+  --primary-d: #ea580c;
+  --primary-l: rgba(251,146,60,0.12);
+  --primary-m: rgba(251,146,60,0.25);
+}
+[data-theme="green"] {
+  --primary:   #22c55e;
+  --primary-d: #16a34a;
+  --primary-l: rgba(34,197,94,0.12);
+  --primary-m: rgba(34,197,94,0.25);
+}
 
+// ─── Light Mode override ─────────────────────────────────────
+[data-light="true"] {
+  --bg:     #f5f7fa;
+  --card:   #ffffff;
+  --card-2: #fafbfc;
+  --border: #e2e8f0;
+  --text:   #0f172a;
+  --text2:  #475569;
+  --muted:  #94a3b8;
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.07);
+  --shadow-lg:  0 8px 28px rgba(0,0,0,0.10);
+}
+
+// ─── Ionic overrides ─────────────────────────────────────────
 :root {
-  --ion-background-color: var(--bg);
-  --ion-text-color: var(--text);
-  --ion-color-primary: var(--primary);
-  --ion-toolbar-background: var(--primary);
-  --ion-toolbar-color: #fff;
-  --ion-tab-bar-background: var(--card);
+  --ion-background-color:    var(--bg);
+  --ion-text-color:          var(--text);
+  --ion-color-primary:       var(--primary);
+  --ion-toolbar-background:  #0d1520;
+  --ion-toolbar-color:       #e8f0fe;
+  --ion-tab-bar-background:  var(--card);
   --ion-tab-bar-border-color: var(--border);
-  --ion-item-background: var(--card);
-  --ion-card-background: var(--card);
+  --ion-item-background:     var(--card);
+  --ion-card-background:     var(--card);
+  --ion-modal-background:    var(--card);
+  --ion-font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+// ─── Base ────────────────────────────────────────────────────
+*, *::before, *::after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
 
 html, body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 16px;
   background: var(--bg);
   color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 ion-content {
@@ -53,6 +131,41 @@ ion-content {
   --padding-top: 16px;
 }
 
+// ─── Toolbar ────────────────────────────────────────────────
+ion-toolbar {
+  --background: #0d1520;
+  --color: #e8f0fe;
+  --border-width: 0;
+  --min-height: 54px;
+
+  ion-title {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #e8f0fe;
+  }
+
+  ion-back-button {
+    --color: var(--primary);
+  }
+
+  ion-button {
+    --color: var(--primary);
+    font-weight: 600;
+  }
+}
+
+// ─── Page fade-in ────────────────────────────────────────────
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+ion-content > * {
+  animation: fadeUp 0.2s var(--ease) both;
+}
+
 @media print {
-  ion-tab-bar, ion-toolbar .header-controls { display: none !important; }
+  ion-toolbar { display: none !important; }
 }

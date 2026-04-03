@@ -14,7 +14,7 @@ export class ProfileService {
 
   private load(): void {
     const profiles = this.storage.getJson<Profile[]>('rp_profiles', [
-      { id: 'default', name: 'Default', emoji: '👤', theme: 'blue', appName: 'Rehab Planner' }
+      { id: 'default', name: 'Default', emoji: '👤', theme: 'teal', appName: 'Rehab Planner' }
     ]);
     this.profiles.set(profiles);
     this.activeProfileId.set(this.storage.get('rp_active_profile') || 'default');

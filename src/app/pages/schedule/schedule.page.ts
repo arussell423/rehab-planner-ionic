@@ -16,7 +16,9 @@ import { REST_QUOTES, PAIN_EMOJIS, TEMPLATES } from '../../constants';
   imports: [IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle, NgFor, NgIf, FormsModule]
 })
 export class SchedulePage implements OnInit {
+  private readonly DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   today = signal<string>('Monday');
+  selectedDay = signal<string>('Monday');
   todaySchedule = signal<DaySchedule | null>(null);
   dayData = signal<DayData | null>(null);
   restQuote = signal<string>('');
@@ -45,14 +47,18 @@ export class SchedulePage implements OnInit {
   ionViewWillEnter(): void { this.load(); }
 
   load(): void {
-    const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    const todayName = dayNames[new Date().getDay()];
+    const todayName = this.DAY_NAMES[new Date().getDay()];
     this.today.set(todayName);
+    this.selectedDay.set(todayName);
+    this.loadDay(todayName);
+  }
+
+  loadDay(dayName: string): void {
     const schedule = this.schedSvc.getSchedule();
     this.allSchedule.set(schedule);
-    const sched = schedule.find(s => s.day === todayName) || schedule[0];
+    const sched = schedule.find(s => s.day === dayName) || schedule[0];
     this.todaySchedule.set(sched);
-    const data = this.schedSvc.getDayData(todayName);
+    const data = this.schedSvc.getDayData(dayName);
     this.dayData.set(data);
     this.medications.set(this.schedSvc.getMedications());
     this.weightUnit.set(this.schedSvc.getWeightUnit());
@@ -60,6 +66,16 @@ export class SchedulePage implements OnInit {
     this.calcProgress(sched, data);
     this.buildMacroChart(data);
   }
+
+  navigateDay(dir: number): void {
+    const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+    const cur = days.indexOf(this.selectedDay());
+    const next = days[(cur + dir + 7) % 7];
+    this.selectedDay.set(next);
+    this.loadDay(next);
+  }
+
+  get isToday(): boolean { return this.selectedDay() === this.today(); }
 
   calcProgress(sched: DaySchedule, data: DayData): void {
     const total = sched.morning.length + sched.afternoon.length + sched.evening.length;
@@ -87,18 +103,18 @@ export class SchedulePage implements OnInit {
     const data = { ...this.dayData()! };
     data.activities = { ...data.activities, [key]: checked };
     this.dayData.set(data);
-    this.schedSvc.saveDayData(this.today(), data);
+    this.schedSvc.saveDayData(this.selectedDay(), data);
     this.calcProgress(this.todaySchedule()!, data);
     this.checkConfetti(data);
   }
 
   checkConfetti(data: DayData): void {
     const sched = this.todaySchedule()!;
-    if (sched.rest) return;
+    if (sched.rest || !this.isToday) return;
     const total = sched.morning.length + sched.afternoon.length + sched.evening.length;
     const done = Object.values(data.activities || {}).filter(Boolean).length;
     const steps = parseInt(data.steps) || 0;
-    const key = `${this.today()}_${new Date().toISOString().slice(0, 10)}`;
+    const key = `${this.selectedDay()}_${new Date().toISOString().slice(0, 10)}`;
     if (done === total && total > 0 && steps >= sched.stepGoal && !this.confettiShown[key]) {
       this.launchConfetti();
       this.confettiShown[key] = true;
@@ -136,7 +152,7 @@ export class SchedulePage implements OnInit {
   saveField(field: keyof DayData, value: string | number): void {
     const data = { ...this.dayData()!, [field]: value };
     this.dayData.set(data as DayData);
-    this.schedSvc.saveDayData(this.today(), data as DayData);
+    this.schedSvc.saveDayData(this.selectedDay(), data as DayData);
     if (field === 'steps') this.checkConfetti(data as DayData);
     if (['carbs','protein','fat'].includes(field as string)) this.buildMacroChart(data as DayData);
   }
@@ -145,7 +161,7 @@ export class SchedulePage implements OnInit {
     const data = { ...this.dayData()! };
     data.meds = { ...data.meds, [med]: checked };
     this.dayData.set(data);
-    this.schedSvc.saveDayData(this.today(), data);
+    this.schedSvc.saveDayData(this.selectedDay(), data);
   }
 
   setSleepQuality(val: number): void { this.saveField('sleep', val); }
@@ -156,7 +172,7 @@ export class SchedulePage implements OnInit {
     const sched = { ...this.todaySchedule()! };
     (sched as any)[slot] = [...(sched as any)[slot], activity];
     this.todaySchedule.set(sched);
-    const schedule = this.schedSvc.getSchedule().map(s => s.day === this.today() ? sched : s);
+    const schedule = this.schedSvc.getSchedule().map(s => s.day === this.selectedDay() ? sched : s);
     this.schedSvc.saveSchedule(schedule);
     this.showTemplateSheet.set(false);
     this.calcProgress(sched, this.dayData()!);
@@ -169,9 +185,9 @@ export class SchedulePage implements OnInit {
     activities.splice(index, 1);
     (sched as any)[slot] = activities;
     this.todaySchedule.set(sched);
-    const schedule = this.schedSvc.getSchedule().map(s => s.day === this.today() ? sched : s);
+    const schedule = this.schedSvc.getSchedule().map(s => s.day === this.selectedDay() ? sched : s);
     this.schedSvc.saveSchedule(schedule);
-    this.undoData = { dayName: this.today(), data: this.dayData()!, slot, index, activity };
+    this.undoData = { dayName: this.selectedDay(), data: this.dayData()!, slot, index, activity };
     this.showToast(`"${activity}" deleted. <span class="undo-link">Undo</span>`);
     this.calcProgress(sched, this.dayData()!);
   }
@@ -184,7 +200,7 @@ export class SchedulePage implements OnInit {
     list.splice(index, 0, activity);
     (sched as any)[slot] = list;
     this.todaySchedule.set(sched);
-    const schedule = this.schedSvc.getSchedule().map(s => s.day === this.today() ? sched : s);
+    const schedule = this.schedSvc.getSchedule().map(s => s.day === this.selectedDay() ? sched : s);
     this.schedSvc.saveSchedule(schedule);
     this.undoData = null;
     this.hideToast();
@@ -201,7 +217,7 @@ export class SchedulePage implements OnInit {
   executeCopy(): void {
     const targets = Object.entries(this.copyTargetDays()).filter(([,v]) => v).map(([k]) => k);
     const schedule = this.schedSvc.getSchedule();
-    const src = schedule.find(s => s.day === this.today());
+    const src = schedule.find(s => s.day === this.selectedDay());
     if (!src) return;
     const updated = schedule.map(s => {
       if (!targets.includes(s.day)) return s;
@@ -215,10 +231,6 @@ export class SchedulePage implements OnInit {
     this.schedSvc.saveSchedule(updated);
     this.showCopySheet.set(false);
     this.showToast(`Copied to ${targets.join(', ')}`);
-  }
-
-  getDayLabel(day: string): string {
-    return day === this.today() ? `${day} (Today)` : day;
   }
 
   activityKey(day: string, slot: string, i: number): string {

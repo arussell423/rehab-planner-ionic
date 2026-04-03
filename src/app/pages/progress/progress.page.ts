@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NgFor, NgIf } from '@angular/common';
-import { IonContent } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton } from '@ionic/angular/standalone';
 import { ScheduleService } from '../../services/schedule.service';
 import { StreakResult, PersonalRecords } from '../../models';
 
@@ -10,7 +10,7 @@ import { StreakResult, PersonalRecords } from '../../models';
   templateUrl: './progress.page.html',
   styleUrls: ['./progress.page.scss'],
   standalone: true,
-  imports: [IonContent, NgFor, NgIf]
+  imports: [IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, NgFor, NgIf]
 })
 export class ProgressPage implements OnInit {
   streak = signal<StreakResult>({ current: 0, best: 0 });

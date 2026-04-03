@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NgFor, NgIf } from '@angular/common';
-import { IonContent } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton } from '@ionic/angular/standalone';
 import { ScheduleService } from '../../services/schedule.service';
 import { HistoryPoint } from '../../models';
 import { CHART_COLORS } from '../../constants';
@@ -11,7 +11,7 @@ import { CHART_COLORS } from '../../constants';
   templateUrl: './history.page.html',
   styleUrls: ['./history.page.scss'],
   standalone: true,
-  imports: [IonContent, NgFor, NgIf]
+  imports: [IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, NgFor, NgIf]
 })
 export class HistoryPage implements OnInit {
   metrics = ['steps','calories','sleep','completion','pain'];
