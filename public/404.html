@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ART — Train Smart Recover Strong</title>
+  <script>
+    // GitHub Pages SPA fix — spa-github-pages technique
+    // When GH Pages 404s on a deep route (e.g. /rehab-planner-ionic/dashboard),
+    // encode the path into a query string and redirect to index.html
+    var pathSegmentsToKeep = 1; // 1 for project pages (keeps /repo-name/)
+    var l = window.location;
+    l.replace(
+      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+      l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+      l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+      (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+      l.hash
+    );
+  </script>
+</head>
+<body></body>
+</html>
