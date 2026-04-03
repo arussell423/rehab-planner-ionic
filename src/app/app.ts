@@ -8,7 +8,9 @@ import {
   moonOutline, sunnyOutline, trashOutline, pencilOutline, checkmark,
   arrowBack, timeOutline, repeatOutline, scaleOutline, fitnessOutline,
   leafOutline, waterOutline, bedOutline, analyticsOutline, trophyOutline,
-  documentAttachOutline, cloudUploadOutline
+  documentAttachOutline, cloudUploadOutline,
+  heartOutline, syncOutline, informationCircleOutline, warningOutline,
+  checkmarkCircleOutline
 } from 'ionicons/icons';
 import { ThemeService } from './services/theme.service';
 
@@ -27,7 +29,9 @@ export class App implements OnInit {
       moonOutline, sunnyOutline, trashOutline, pencilOutline, checkmark,
       arrowBack, timeOutline, repeatOutline, scaleOutline, fitnessOutline,
       leafOutline, waterOutline, bedOutline, analyticsOutline, trophyOutline,
-      documentAttachOutline, cloudUploadOutline
+      documentAttachOutline, cloudUploadOutline,
+      heartOutline, syncOutline, informationCircleOutline, warningOutline,
+      checkmarkCircleOutline
     });
   }
   ngOnInit() { this.themeSvc.apply(); }

@@ -4,10 +4,23 @@
       <ion-back-button defaultHref="/dashboard"></ion-back-button>
     </ion-buttons>
     <ion-title>Daily Metrics — {{ selectedDay() }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="syncHealth()" [disabled]="healthSvc.isSyncing()">
+        <ion-icon slot="icon-only" [name]="healthSvc.isSyncing() ? 'sync-outline' : 'heart-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding-bottom">
+
+  <!-- Health sync banner -->
+  <div class="health-banner" *ngIf="healthBanner()">
+    <ion-icon [name]="healthBannerIcon()" class="banner-icon"></ion-icon>
+    <span>{{ healthBanner() }}</span>
+    <button class="banner-close" (click)="healthBanner.set('')">✕</button>
+  </div>
+
   <div class="card">
     <div class="card-header"><div class="card-title">Steps &amp; Calories</div></div>
     <div class="metrics-grid">

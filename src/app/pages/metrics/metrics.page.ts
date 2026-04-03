@@ -2,8 +2,9 @@ import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NgFor, NgIf } from '@angular/common';
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { ScheduleService } from '../../services/schedule.service';
+import { HealthService } from '../../services/health.service';
 import { DayData } from '../../models';
 import { PAIN_EMOJIS } from '../../constants';
 
@@ -12,7 +13,7 @@ import { PAIN_EMOJIS } from '../../constants';
   templateUrl: './metrics.page.html',
   styleUrls: ['./metrics.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, NgFor, NgIf]
+  imports: [IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonButton, IonIcon, NgFor, NgIf]
 })
 export class MetricsPage implements OnInit {
   private readonly DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -23,11 +24,14 @@ export class MetricsPage implements OnInit {
   stepGoal = signal<number>(5000);
   calGoal = signal<number>(1200);
   macroSvg = signal<SafeHtml>('');
+  healthBanner = signal<string>('');
+  healthBannerIcon = signal<string>('heart-outline');
   painEmojis = PAIN_EMOJIS;
 
   constructor(
     private route: ActivatedRoute,
     private schedSvc: ScheduleService,
+    public healthSvc: HealthService,
     private sanitizer: DomSanitizer
   ) {}
 
@@ -92,6 +96,32 @@ export class MetricsPage implements OnInit {
   setWeightUnit(unit: 'kg' | 'lbs'): void {
     this.weightUnit.set(unit);
     this.schedSvc.saveWeightUnit(unit);
+  }
+
+  async syncHealth(): Promise<void> {
+    if (!this.healthSvc.isNative) {
+      this.healthBannerIcon.set('information-circle-outline');
+      this.healthBanner.set(
+        'Health sync works when the app is installed natively on iOS or Android. ' +
+        'On iPhone: install via Safari → Share → Add to Home Screen, then open from the icon.'
+      );
+      return;
+    }
+    const snap = await this.healthSvc.getTodaySnapshot();
+    if (!snap) {
+      this.healthBannerIcon.set('warning-outline');
+      this.healthBanner.set('Could not read health data. Check permissions in your device Settings → Health → ART.');
+      return;
+    }
+    const data = { ...this.dayData()! };
+    if (snap.steps   != null) data.steps    = String(snap.steps);
+    if (snap.calories != null) data.calories = String(snap.calories);
+    this.dayData.set(data);
+    this.schedSvc.saveDayData(this.selectedDay(), data);
+    const src = snap.source === 'apple_health' ? 'Apple Health' : 'Google Health';
+    this.healthBannerIcon.set('checkmark-circle-outline');
+    this.healthBanner.set(`Synced from ${src} — ${snap.steps?.toLocaleString() ?? '—'} steps · ${snap.calories ?? '—'} kcal`);
+    setTimeout(() => this.healthBanner.set(''), 5000);
   }
 
   stars(rating: number): boolean[] {
