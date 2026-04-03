@@ -1,0 +1,87 @@
+<ion-content class="ion-padding-bottom">
+
+  <div *ngFor="let day of schedule(); let di = index; trackBy: trackByDay" class="edit-day-card">
+    <div class="edit-header">
+      <div class="edit-title">{{ day.day }}</div>
+      <div class="edit-actions">
+        <button class="btn-icon" (click)="openTemplates(day.day, 'morning')" title="Add from templates">📚</button>
+        <button class="btn-icon" (click)="openCopySheet(day.day)" title="Copy day">📋</button>
+      </div>
+    </div>
+
+    <div class="rest-toggle">
+      <input type="checkbox" [id]="'rest-'+di" [checked]="day.rest"
+        (change)="toggleRest(di, $any($event.target).checked)">
+      <label [for]="'rest-'+di">Rest Day</label>
+    </div>
+
+    <div *ngIf="!day.rest">
+      <div class="goals-row">
+        <div class="metric-input">
+          <label>Step Goal</label>
+          <input type="number" [value]="day.stepGoal" (change)="updateGoal(di, 'stepGoal', $any($event.target).value)" min="0">
+        </div>
+        <div class="metric-input">
+          <label>Cal Goal</label>
+          <input type="number" [value]="day.calGoal" (change)="updateGoal(di, 'calGoal', $any($event.target).value)" min="0">
+        </div>
+      </div>
+
+      <div *ngFor="let slot of ['morning','afternoon','evening']">
+        <div class="slot-label">
+          {{ slot === 'morning' ? '🌅 Morning' : slot === 'afternoon' ? '☀️ Afternoon' : '🌙 Evening' }}
+        </div>
+        <div class="edit-activity" *ngFor="let act of getSlot(day, slot); let ai = index">
+          <input class="edit-input" [value]="act"
+            (change)="renameActivity(di, slot, ai, $any($event.target).value)">
+          <button class="btn-del" (click)="deleteActivity(di, slot, ai)">🗑</button>
+        </div>
+        <div class="add-activity-row">
+          <input class="edit-input" [(ngModel)]="newActivity[di + '_' + slot]"
+            placeholder="Add activity..." (keyup.enter)="addActivity(di, slot)">
+          <button class="btn btn-primary" (click)="addActivity(di, slot)">Add</button>
+        </div>
+        <button class="btn-add" (click)="openTemplates(day.day, slot)">📚 Add from Templates</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template Bottom Sheet -->
+  <ion-modal [isOpen]="showTemplateSheet()" (ionModalDidDismiss)="showTemplateSheet.set(false)"
+    [breakpoints]="[0,0.75]" [initialBreakpoint]="0.75">
+    <ng-template>
+      <ion-header><ion-toolbar>
+        <ion-title>Activity Templates</ion-title>
+        <ion-buttons slot="end"><ion-button (click)="showTemplateSheet.set(false)">✕</ion-button></ion-buttons>
+      </ion-toolbar></ion-header>
+      <ion-content class="ion-padding">
+        <div *ngFor="let cat of templateCategories" class="template-category">
+          <div class="cat-title">{{ cat[0] }}</div>
+          <div class="template-item" *ngFor="let item of cat[1]" (click)="addFromTemplate(item)">{{ item }}</div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Copy Day Sheet -->
+  <ion-modal [isOpen]="showCopySheet()" (ionModalDidDismiss)="showCopySheet.set(false)"
+    [breakpoints]="[0,0.55]" [initialBreakpoint]="0.55">
+    <ng-template>
+      <ion-header><ion-toolbar>
+        <ion-title>Copy "{{ copySourceDay() }}" To...</ion-title>
+        <ion-buttons slot="end"><ion-button (click)="showCopySheet.set(false)">✕</ion-button></ion-buttons>
+      </ion-toolbar></ion-header>
+      <ion-content class="ion-padding">
+        <div *ngFor="let day of allDays">
+          <div class="day-checkbox" *ngIf="day !== copySourceDay()">
+            <input type="checkbox" [id]="'cp-'+day"
+            (change)="setCopyTarget(day, $any($event.target).checked)">
+            <label [for]="'cp-'+day">{{ day }}</label>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:16px;width:100%" (click)="executeCopy()">Copy Activities</button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

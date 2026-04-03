@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ appName() }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleDark()" fill="clear" style="--color:#fff;font-size:1.3rem">
+        {{ isDark() ? '☀️' : '🌙' }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<!-- Profile Bar -->
+<div class="profile-bar" *ngIf="profiles().length > 1">
+  <div
+    *ngFor="let p of profiles()"
+    class="profile-chip"
+    [class.active]="p.id === activeProfileId()"
+    (click)="switchProfile(p.id)">
+    <span>{{ p.emoji }}</span>
+    <span>{{ p.name }}</span>
+  </div>
+</div>
+
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="schedule" href="/tabs/schedule">
+      <span class="tab-icon">📅</span>
+      <ion-label>Schedule</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="progress" href="/tabs/progress">
+      <span class="tab-icon">📊</span>
+      <ion-label>Progress</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="history" href="/tabs/history">
+      <span class="tab-icon">📈</span>
+      <ion-label>History</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="edit" href="/tabs/edit">
+      <span class="tab-icon">✏️</span>
+      <ion-label>Edit</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="settings" href="/tabs/settings">
+      <span class="tab-icon">⚙️</span>
+      <ion-label>Settings</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
+
+<app-onboarding-modal
+  [isOpen]="showOnboarding()"
+  (done)="onOnboardingDone()">
+</app-onboarding-modal>

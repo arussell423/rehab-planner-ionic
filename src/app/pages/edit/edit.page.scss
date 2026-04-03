@@ -1,0 +1,56 @@
+@use '../../styles/shared' as *;
+
+.edit-day-card {
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 14px;
+  border: 1px solid var(--border);
+}
+
+.edit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.edit-title { font-size: 1rem; font-weight: 700; color: var(--text); }
+
+.rest-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  input { width: 20px; height: 20px; cursor: pointer; accent-color: var(--rest); }
+  label { font-size: 0.9rem; font-weight: 600; color: var(--text); cursor: pointer; }
+}
+
+.goals-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.slot-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text2);
+  margin: 12px 0 8px;
+}
+
+.edit-activity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.add-activity-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}

@@ -1,0 +1,54 @@
+.profile-bar {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  overflow-x: auto;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.profile-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+
+  &.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+}
+
+.tab-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+ion-tab-bar {
+  --background: var(--card);
+  --border: 1px solid var(--border);
+  height: 60px;
+}
+
+ion-tab-button {
+  --color: var(--muted);
+  --color-selected: var(--primary);
+  ion-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.3px; }
+}
+
+ion-toolbar {
+  --background: var(--primary);
+  --color: #fff;
+}

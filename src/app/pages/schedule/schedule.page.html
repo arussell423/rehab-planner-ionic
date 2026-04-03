@@ -1,0 +1,197 @@
+<ion-content class="ion-padding-bottom">
+
+  <!-- Day Header -->
+  <div class="day-header" [class.rest]="todaySchedule()?.rest">
+    <div class="dh-info">
+      <h2>{{ today() }}</h2>
+      <div class="sub" *ngIf="!todaySchedule()?.rest">
+        {{ doneCount() }} of {{ totalCount() }} activities completed
+      </div>
+      <div class="sub" *ngIf="todaySchedule()?.rest">Rest &amp; Recovery Day</div>
+    </div>
+    <div class="dh-badge" *ngIf="!todaySchedule()?.rest">{{ donePct() }}%</div>
+    <div class="dh-badge" *ngIf="todaySchedule()?.rest">🛌 Rest</div>
+  </div>
+
+  <!-- Rest Day Quote -->
+  <div class="rest-quote" *ngIf="todaySchedule()?.rest">{{ restQuote() }}</div>
+
+  <!-- Activities -->
+  <div class="card" *ngIf="!todaySchedule()?.rest">
+    <div class="card-header">
+      <div class="card-title">📋 Activities</div>
+      <div class="card-actions">
+        <button class="btn-icon" (click)="currentSlot.set('morning'); showTemplateSheet.set(true)" title="Add from templates">➕</button>
+        <button class="btn-icon" (click)="showCopySheet.set(true)" title="Copy day">📋</button>
+      </div>
+    </div>
+
+    <div *ngFor="let slot of ['morning','afternoon','evening']">
+      <div class="act-section" *ngIf="getSlot(todaySchedule()!, slot).length > 0">
+        <div class="section-label">
+          {{ slot === 'morning' ? '🌅 Morning' : slot === 'afternoon' ? '☀️ Afternoon' : '🌙 Evening' }}
+        </div>
+        <div class="activity-item" *ngFor="let act of getSlot(todaySchedule()!, slot); let i = index">
+          <input type="checkbox" class="act-checkbox"
+            [checked]="isActivityDone(activityKey(today(), slot, i))"
+            (change)="toggleActivity(activityKey(today(), slot, i), $any($event.target).checked)">
+          <span class="act-label" [class.done]="isActivityDone(activityKey(today(), slot, i))">{{ act }}</span>
+          <button class="btn-del" (click)="deleteActivity(slot, i)">🗑</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metrics Card -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">📊 Daily Metrics</div></div>
+
+    <div class="metrics-grid">
+      <div class="metric-input">
+        <label>Steps</label>
+        <input type="number" [value]="dayData()?.steps" (change)="saveField('steps', $any($event.target).value)"
+          placeholder="{{ todaySchedule()?.stepGoal }}" min="0" max="99999">
+      </div>
+      <div class="metric-input">
+        <label>Calories</label>
+        <input type="number" [value]="dayData()?.calories" (change)="saveField('calories', $any($event.target).value)"
+          placeholder="{{ todaySchedule()?.calGoal }}" min="0" max="9999">
+      </div>
+    </div>
+
+    <div class="macros-grid">
+      <div class="metric-input">
+        <label>Carbs (g)</label>
+        <input type="number" [value]="dayData()?.carbs" (change)="saveField('carbs', $any($event.target).value)" placeholder="150" min="0" max="999">
+      </div>
+      <div class="metric-input">
+        <label>Protein (g)</label>
+        <input type="number" [value]="dayData()?.protein" (change)="saveField('protein', $any($event.target).value)" placeholder="80" min="0" max="999">
+      </div>
+      <div class="metric-input">
+        <label>Fat (g)</label>
+        <input type="number" [value]="dayData()?.fat" (change)="saveField('fat', $any($event.target).value)" placeholder="40" min="0" max="999">
+      </div>
+    </div>
+
+    <!-- Macro donut -->
+    <div *ngIf="macroSvg()" style="margin-bottom:16px" [innerHTML]="macroSvg()"></div>
+
+    <!-- Pain Slider -->
+    <div class="pain-slider">
+      <label>Pain Level (0-10)</label>
+      <div class="pain-track">
+        <input type="range" min="0" max="10" [value]="dayData()?.pain || 0"
+          (input)="setPain(+$any($event.target).value)">
+        <span class="pain-emoji">{{ painEmoji }}</span>
+      </div>
+    </div>
+
+    <!-- Weight -->
+    <div class="metric-input">
+      <label>Body Weight</label>
+      <div style="display:flex;gap:8px">
+        <input type="number" [value]="dayData()?.weight" (change)="saveField('weight', $any($event.target).value)"
+          placeholder="70" min="0.1" max="700" step="0.1" style="flex:1">
+        <div class="weight-unit-toggle">
+          <button class="unit-btn" [class.active]="weightUnit()==='kg'" (click)="setWeightUnit('kg')">kg</button>
+          <button class="unit-btn" [class.active]="weightUnit()==='lbs'" (click)="setWeightUnit('lbs')">lbs</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Medications -->
+    <div class="meds-check" *ngIf="medications().length">
+      <label>💊 Medications</label>
+      <div class="med-item" *ngFor="let med of medications()">
+        <input type="checkbox" [checked]="dayData()?.meds?.[med]"
+          (change)="saveMed(med, $any($event.target).checked)">
+        <span>{{ med }}</span>
+      </div>
+    </div>
+
+    <!-- Sleep -->
+    <div class="metric-input">
+      <label>Sleep Hours</label>
+      <input type="number" [value]="dayData()?.sleepHrs" (change)="saveField('sleepHrs', $any($event.target).value)"
+        placeholder="7.5" min="0" max="24" step="0.5">
+    </div>
+
+    <div class="sleep-rating">
+      <label>Sleep Quality</label>
+      <div class="stars">
+        <span *ngFor="let filled of stars(dayData()?.sleep || 0); let i = index"
+          class="star" [class.filled]="filled"
+          (click)="setSleepQuality(i+1)">⭐</span>
+      </div>
+    </div>
+
+    <div class="metric-input">
+      <label>Personal Notes</label>
+      <textarea [value]="dayData()?.notes || ''" (change)="saveField('notes', $any($event.target).value)"
+        placeholder="How are you feeling today?"></textarea>
+    </div>
+
+    <div class="metric-input">
+      <label>Therapist Notes</label>
+      <textarea [value]="dayData()?.therapistNotes || ''" (change)="saveField('therapistNotes', $any($event.target).value)"
+        placeholder="Notes from your therapist or doctor..."></textarea>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-wrap" [class.visible]="toastVisible()">
+    <div class="toast" [innerHTML]="toast()" (click)="toast().includes('Undo') && undo()"></div>
+  </div>
+
+  <!-- Template Bottom Sheet -->
+  <ion-modal [isOpen]="showTemplateSheet()" (ionModalDidDismiss)="showTemplateSheet.set(false)"
+    [breakpoints]="[0,0.75]" [initialBreakpoint]="0.75">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Activity Templates</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="showTemplateSheet.set(false)">✕</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div *ngFor="let cat of templateCategories" class="template-category">
+          <div class="cat-title">{{ cat[0] }}</div>
+          <div class="template-item" *ngFor="let item of cat[1]" (click)="addActivityFromTemplate(item)">
+            {{ item }}
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Copy Day Bottom Sheet -->
+  <ion-modal [isOpen]="showCopySheet()" (ionModalDidDismiss)="showCopySheet.set(false)"
+    [breakpoints]="[0,0.6]" [initialBreakpoint]="0.6">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Copy Activities To...</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="showCopySheet.set(false)">✕</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div *ngFor="let day of allDays">
+          <div class="day-checkbox" *ngIf="day !== today()">
+            <input type="checkbox" [id]="'copy-'+day"
+              (change)="setCopyTarget(day, $any($event.target).checked)">
+            <label [for]="'copy-'+day">{{ day }}</label>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:16px;width:100%" (click)="executeCopy()">
+          Copy Activities
+        </button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

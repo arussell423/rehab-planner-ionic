@@ -1,0 +1,57 @@
+<ion-content class="ion-padding-bottom">
+
+  <!-- Streak Box -->
+  <div class="streak-box">
+    <div class="streak-emoji">🔥</div>
+    <div class="streak-val">{{ streak().current }}</div>
+    <div class="streak-label">Day Streak</div>
+    <div class="streak-best">Best: {{ streak().best }} days</div>
+  </div>
+
+  <!-- Personal Records -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">🏆 Personal Records</div></div>
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div class="stat-val">{{ records().bestSteps }}</div>
+        <div class="stat-label">Best Steps</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val">{{ records().bestSleep }}h</div>
+        <div class="stat-label">Best Sleep</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val">{{ records().bestWeek }}%</div>
+        <div class="stat-label">Best Week</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly Completion -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">📈 Weekly Completion</div></div>
+    <div *ngFor="let d of weekCompletion()" class="completion-day">
+      <div class="comp-header">
+        <div class="comp-day">{{ d.day }}</div>
+        <div class="comp-pct" *ngIf="!d.rest">{{ d.done }}/{{ d.total }} ({{ d.pct }}%)</div>
+        <div class="comp-pct" *ngIf="d.rest">Rest Day 🛌</div>
+      </div>
+      <div class="comp-bar" *ngIf="!d.rest">
+        <div class="comp-fill" [style.width.%]="d.pct"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Macros -->
+  <div class="card" *ngIf="macroSvg()">
+    <div class="card-header"><div class="card-title">🥗 Today's Macros</div></div>
+    <div [innerHTML]="macroSvg()"></div>
+  </div>
+
+  <!-- Pain Chart -->
+  <div class="card" *ngIf="painSvg()">
+    <div class="card-header"><div class="card-title">🤕 This Week's Pain</div></div>
+    <div class="chart-container" [innerHTML]="painSvg()"></div>
+  </div>
+
+</ion-content>

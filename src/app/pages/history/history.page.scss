@@ -1,0 +1,21 @@
+@use '../../styles/shared' as *;
+
+.chart-container {
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: var(--rs);
+  overflow-x: auto;
+}
+
+.chart-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.chart-stat { text-align: center; }
+.chart-stat-val { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+.chart-stat-label { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }

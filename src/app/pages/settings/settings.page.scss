@@ -1,0 +1,45 @@
+@use '../../styles/shared' as *;
+
+.settings-section { margin-bottom: 24px; }
+.settings-title {
+  font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.5px; color: var(--text2); margin-bottom: 12px;
+}
+
+.theme-swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+.theme-swatch {
+  width: 48px; height: 48px; border-radius: 50%; cursor: pointer;
+  border: 3px solid transparent; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 1.2rem;
+  &:hover { transform: scale(1.1); }
+  &.active { border-color: var(--text); box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--text); }
+}
+
+.profile-list { display: flex; flex-direction: column; gap: 8px; }
+.profile-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px;
+  background: var(--bg); border-radius: var(--rs); border: 2px solid transparent;
+  &.active { border-color: var(--primary); background: var(--primary-l); }
+}
+.profile-emoji { font-size: 1.8rem; }
+.profile-info { flex: 1; }
+.profile-name { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+.profile-sub { font-size: 0.8rem; color: var(--text2); }
+.profile-actions { display: flex; gap: 6px; }
+
+.med-list { display: flex; flex-direction: column; gap: 6px; }
+.med-list-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px;
+  background: var(--bg); border-radius: var(--rs);
+  span { flex: 1; font-size: 0.9rem; color: var(--text); }
+}
+
+.add-activity-row { display: flex; gap: 8px; }
+
+.settings-btns { display: flex; flex-direction: column; gap: 8px; }
+
+.toast-bar {
+  background: var(--text); color: #fff; padding: 12px 16px;
+  border-radius: var(--rs); margin-bottom: 14px; font-size: 0.9rem;
+}

@@ -1,0 +1,38 @@
+<ion-content class="ion-padding-bottom">
+  <div class="card">
+    <div class="card-header"><div class="card-title">📅 8-Week Trends</div></div>
+
+    <div class="chart-tabs">
+      <div *ngFor="let m of metrics"
+        class="chart-tab" [class.active]="m === currentMetric()"
+        (click)="selectMetric(m)">
+        {{ metricLabels[m] }}
+      </div>
+    </div>
+
+    <div class="chart-container" *ngIf="hasData()" [innerHTML]="chartSvg()"></div>
+
+    <div class="chart-stats" *ngIf="hasData()">
+      <div class="chart-stat">
+        <div class="chart-stat-val">{{ avg() }}</div>
+        <div class="chart-stat-label">Average</div>
+      </div>
+      <div class="chart-stat">
+        <div class="chart-stat-val">{{ best() }}</div>
+        <div class="chart-stat-label">Best</div>
+      </div>
+      <div class="chart-stat">
+        <div class="chart-stat-val">{{ trendLabel() }}</div>
+        <div class="chart-stat-label">Trend</div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="!hasData()">
+      <div class="empty-state-icon">📊</div>
+      <div class="empty-state-text">
+        Not enough historical data yet.<br>
+        Complete at least 2 weeks to see trends!
+      </div>
+    </div>
+  </div>
+</ion-content>

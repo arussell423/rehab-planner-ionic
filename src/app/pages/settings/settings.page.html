@@ -1,0 +1,96 @@
+<ion-content class="ion-padding-bottom">
+
+  <!-- Toast -->
+  <div class="toast-bar" *ngIf="toast()">{{ toast() }}</div>
+
+  <!-- Appearance -->
+  <div class="settings-section">
+    <div class="settings-title">🎨 Appearance</div>
+    <div class="theme-swatches">
+      <div *ngFor="let t of themes"
+        class="theme-swatch" [class.active]="t === currentTheme()"
+        [style.background]="themeColor(t)"
+        (click)="setTheme(t)">✓</div>
+    </div>
+    <div class="dark-toggle" style="margin-top:12px">
+      <span>Dark Mode</span>
+      <div class="toggle-switch" [class.active]="isDark()" (click)="toggleDark()">
+        <div class="toggle-knob"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profiles -->
+  <div class="settings-section">
+    <div class="settings-title">👤 Profiles</div>
+    <div class="profile-list">
+      <div *ngFor="let p of profiles()" class="profile-item" [class.active]="p.id === activeProfileId()">
+        <div class="profile-emoji">{{ p.emoji }}</div>
+        <div class="profile-info">
+          <div class="profile-name">{{ p.name }}</div>
+          <div class="profile-sub">{{ p.appName }}</div>
+        </div>
+        <div class="profile-actions">
+          <button class="btn-icon" (click)="switchProfile(p.id)" *ngIf="p.id !== activeProfileId()">▶️</button>
+          <button class="btn-icon" (click)="openEditProfile(p)">✏️</button>
+          <button class="btn-icon" (click)="deleteProfile(p.id)" *ngIf="profiles().length > 1">🗑</button>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-secondary" style="margin-top:10px;width:100%" (click)="openAddProfile()">+ Add Profile</button>
+  </div>
+
+  <!-- App Name -->
+  <div class="settings-section">
+    <div class="settings-title">🏷️ App Name</div>
+    <input class="edit-input" [value]="appName()" (change)="saveAppName($any($event.target).value)" placeholder="Rehab Planner">
+  </div>
+
+  <!-- Medications -->
+  <div class="settings-section">
+    <div class="settings-title">💊 Medications</div>
+    <div class="med-list">
+      <div *ngFor="let m of medications(); let i = index" class="med-list-item">
+        <span>{{ m }}</span>
+        <button class="btn-icon" (click)="removeMed(i)">🗑</button>
+      </div>
+    </div>
+    <div class="add-activity-row" style="margin-top:8px">
+      <input class="edit-input" [(ngModel)]="newMed" placeholder="Add medication..." (keyup.enter)="addMed()">
+      <button class="btn btn-primary" (click)="addMed()">Add</button>
+    </div>
+  </div>
+
+  <!-- Weight Unit -->
+  <div class="settings-section">
+    <div class="settings-title">⚖️ Weight Unit</div>
+    <div class="weight-unit-toggle">
+      <button class="unit-btn" [class.active]="weightUnit()==='kg'" (click)="setWeightUnit('kg')">kg</button>
+      <button class="unit-btn" [class.active]="weightUnit()==='lbs'" (click)="setWeightUnit('lbs')">lbs</button>
+    </div>
+  </div>
+
+  <!-- Data Management -->
+  <div class="settings-section">
+    <div class="settings-title">💾 Data</div>
+    <div class="settings-btns">
+      <button class="btn btn-secondary" (click)="exportJSON()">📤 Export Backup (JSON)</button>
+      <label class="btn btn-secondary" style="cursor:pointer">
+        📥 Import Backup (JSON)
+        <input type="file" accept=".json" style="display:none" (change)="importJSON($event)">
+      </label>
+      <button class="btn btn-secondary" (click)="exportCSV()">📊 Export CSV</button>
+      <button class="btn btn-secondary" (click)="printSchedule()">🖨️ Print Schedule</button>
+      <button class="btn btn-secondary" style="color:var(--warn)" (click)="resetSchedule()">⚠️ Reset Schedule</button>
+      <button class="btn btn-secondary" style="color:var(--danger)" (click)="clearWeekData()">🗑 Clear Week Data</button>
+    </div>
+  </div>
+
+</ion-content>
+
+<app-profile-modal
+  [isOpen]="showProfileModal()"
+  [profile]="editingProfile()"
+  (saved)="onProfileSaved($event)"
+  (cancelled)="showProfileModal.set(false)">
+</app-profile-modal>

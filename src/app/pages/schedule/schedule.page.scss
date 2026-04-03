@@ -1,0 +1,53 @@
+@use '../../styles/shared' as *;
+
+.day-header {
+  background: linear-gradient(135deg, var(--primary-d), var(--primary));
+  color: #fff;
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &.rest { background: linear-gradient(135deg, var(--rest), #818cf8); }
+
+  h2 { font-size: 1.2rem; font-weight: 700; }
+  .sub { font-size: 0.85rem; opacity: 0.85; margin-top: 4px; }
+  .dh-badge { background: rgba(255,255,255,.25); padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+}
+
+.rest-quote {
+  background: linear-gradient(135deg, #818cf8, #a78bfa);
+  color: #fff;
+  border-radius: var(--r);
+  padding: 24px;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.toast-wrap {
+  position: fixed;
+  bottom: 80px;
+  left: 16px;
+  right: 16px;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+
+  &.visible { opacity: 1; pointer-events: auto; }
+}
+
+.toast {
+  background: var(--text);
+  color: #fff;
+  padding: 14px 16px;
+  border-radius: var(--rs);
+  font-size: 0.9rem;
+
+  :global(.undo-link) { color: #fbbf24; font-weight: 700; cursor: pointer; text-decoration: underline; }
+}

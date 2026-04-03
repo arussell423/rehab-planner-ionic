@@ -1,0 +1,58 @@
+@import '@ionic/angular/css/core.css';
+@import '@ionic/angular/css/normalize.css';
+@import '@ionic/angular/css/structure.css';
+@import '@ionic/angular/css/typography.css';
+
+:root {
+  --bg: #f8fafc; --card: #fff; --border: #e2e8f0; --text: #1e293b;
+  --text2: #475569; --muted: #94a3b8;
+  --success: #16a34a; --warn: #d97706; --danger: #dc2626; --rest: #6366f1;
+  --r: 12px; --rs: 8px;
+}
+
+[data-theme="blue"]   { --primary: #2563eb; --primary-d: #1d4ed8; --primary-l: #dbeafe; }
+[data-theme="green"]  { --primary: #16a34a; --primary-d: #15803d; --primary-l: #dcfce7; }
+[data-theme="purple"] { --primary: #7c3aed; --primary-d: #6d28d9; --primary-l: #ede9fe; }
+[data-theme="rose"]   { --primary: #e11d48; --primary-d: #be123c; --primary-l: #ffe4e6; }
+[data-theme="orange"] { --primary: #ea580c; --primary-d: #c2410c; --primary-l: #ffedd5; }
+
+[data-dark="true"] {
+  --bg: #0f172a; --card: #1e293b; --border: #334155;
+  --text: #f1f5f9; --text2: #94a3b8; --muted: #475569;
+}
+[data-dark="true"][data-theme="blue"]   { --primary-l: #1e3a8a; }
+[data-dark="true"][data-theme="green"]  { --primary-l: #14532d; }
+[data-dark="true"][data-theme="purple"] { --primary-l: #4c1d95; }
+[data-dark="true"][data-theme="rose"]   { --primary-l: #881337; }
+[data-dark="true"][data-theme="orange"] { --primary-l: #7c2d12; }
+
+:root {
+  --ion-background-color: var(--bg);
+  --ion-text-color: var(--text);
+  --ion-color-primary: var(--primary);
+  --ion-toolbar-background: var(--primary);
+  --ion-toolbar-color: #fff;
+  --ion-tab-bar-background: var(--card);
+  --ion-tab-bar-border-color: var(--border);
+  --ion-item-background: var(--card);
+  --ion-card-background: var(--card);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+ion-content {
+  --background: var(--bg);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 16px;
+}
+
+@media print {
+  ion-tab-bar, ion-toolbar .header-controls { display: none !important; }
+}
