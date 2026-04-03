@@ -39,7 +39,8 @@ export interface DaySchedule {
 export interface DayData {
   activities: Record<string, boolean>;
   steps: string;
-  calories: string;
+  calories: string;       // active calories — from health sync
+  calorieIntake: string;  // manual food intake
   carbs: string;
   protein: string;
   fat: string;

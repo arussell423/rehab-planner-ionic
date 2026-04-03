@@ -7,7 +7,6 @@ import { ScheduleService } from '../../services/schedule.service';
 import { HealthService } from '../../services/health.service';
 import { DayData } from '../../models';
 import { PAIN_EMOJIS } from '../../constants';
-
 @Component({
   selector: 'app-metrics',
   templateUrl: './metrics.page.html',
@@ -24,6 +23,7 @@ export class MetricsPage implements OnInit {
   stepGoal = signal<number>(5000);
   calGoal = signal<number>(1200);
   macroSvg = signal<SafeHtml>('');
+  macroMode = signal<'g' | '%'>('g');
   healthBanner = signal<string>('');
   healthBannerIcon = signal<string>('heart-outline');
   painEmojis = PAIN_EMOJIS;
@@ -93,6 +93,30 @@ export class MetricsPage implements OnInit {
   setSleepQuality(val: number): void { this.saveField('sleep', val); }
   setPain(val: number): void { this.saveField('pain', val); }
 
+  /** Convert stored grams → % of calorie intake for display */
+  macroToPercent(macro: 'carbs' | 'protein' | 'fat'): number | string {
+    const kcal = parseFloat(this.dayData()?.calorieIntake ?? '');
+    const grams = parseFloat((this.dayData() as any)?.[macro] ?? '');
+    if (!kcal || !grams) return '';
+    const kcalPerG = macro === 'fat' ? 9 : 4;
+    return Math.round((grams * kcalPerG / kcal) * 100);
+  }
+
+  /** Save macros — converts % → grams when in % mode */
+  saveMacro(macro: 'carbs' | 'protein' | 'fat', raw: string): void {
+    const val = parseFloat(raw);
+    if (isNaN(val)) { this.saveField(macro, ''); return; }
+    if (this.macroMode() === '%') {
+      const kcal = parseFloat(this.dayData()?.calorieIntake ?? '');
+      if (!kcal) { this.saveField(macro, ''); return; }
+      const kcalPerG = macro === 'fat' ? 9 : 4;
+      const grams = Math.round((val / 100) * kcal / kcalPerG);
+      this.saveField(macro, String(grams));
+    } else {
+      this.saveField(macro, String(val));
+    }
+  }
+
   setWeightUnit(unit: 'kg' | 'lbs'): void {
     this.weightUnit.set(unit);
     this.schedSvc.saveWeightUnit(unit);
@@ -128,7 +152,12 @@ export class MetricsPage implements OnInit {
     return [1,2,3,4,5].map(i => i <= rating);
   }
 
-  get painEmoji(): string {
-    return PAIN_EMOJIS[this.dayData()?.pain ?? 0];
+  painColor(): string {
+    const level = this.dayData()?.pain ?? 0;
+    if (level <= 2) return '#22c55e';       // green
+    if (level <= 4) return '#84cc16';       // lime
+    if (level <= 6) return '#f59e0b';       // amber
+    if (level <= 8) return '#f97316';       // orange
+    return '#ef4444';                        // red
   }
 }

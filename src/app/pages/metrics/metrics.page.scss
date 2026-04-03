@@ -1,5 +1,42 @@
 @use '../../styles/shared' as *;
 
+.health-readonly {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 12px; border-radius: var(--rs);
+  background: var(--bg); border: 1px dashed var(--border);
+  font-size: 0.85rem; color: var(--text2);
+  .health-icon { font-size: 1rem; color: var(--muted); flex-shrink: 0; }
+  &.has-value { color: var(--text); border-color: var(--primary-m);
+    .health-icon { color: var(--primary); } }
+}
+
+.macros-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.macros-label {
+  font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.6px; color: var(--text2);
+}
+.macro-mode-toggle { display: flex; gap: 4px; }
+
+.pain-label-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+  label { margin-bottom: 0; }
+}
+.pain-badge {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 1.1rem; font-weight: 800; color: #fff;
+  padding: 4px 12px; border-radius: 20px; line-height: 1;
+  transition: background 0.3s;
+  span { font-size: 0.65rem; font-weight: 500; opacity: 0.85; margin-left: 1px; }
+}
+.pain-scale-labels {
+  display: flex; justify-content: space-between;
+  font-size: 0.68rem; color: var(--text2); margin-top: 4px;
+}
+
 .health-banner {
   display: flex; align-items: flex-start; gap: 10px;
   background: var(--primary-l); border: 1px solid var(--primary-m);

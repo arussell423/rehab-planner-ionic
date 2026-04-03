@@ -22,7 +22,7 @@
   </div>
 
   <div class="card">
-    <div class="card-header"><div class="card-title">Steps &amp; Calories</div></div>
+    <div class="card-header"><div class="card-title">Daily Movement</div></div>
     <div class="metrics-grid">
       <div class="metric-input">
         <label>Steps</label>
@@ -30,27 +30,54 @@
           [placeholder]="stepGoal()" min="0" max="99999">
       </div>
       <div class="metric-input">
-        <label>Calories</label>
-        <input type="number" [value]="dayData()?.calories" (change)="saveField('calories', $any($event.target).value)"
-          [placeholder]="calGoal()" min="0" max="9999">
+        <label>Active Calories</label>
+        <div class="health-readonly" [class.has-value]="dayData()?.calories">
+          <ion-icon name="heart-outline" class="health-icon"></ion-icon>
+          <span>{{ dayData()?.calories ? (dayData()!.calories + ' kcal') : 'Synced from health ❤️' }}</span>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-header"><div class="card-title">Macros</div></div>
+    <div class="card-header"><div class="card-title">Nutrition</div></div>
+    <div class="metrics-grid" style="margin-bottom:14px">
+      <div class="metric-input" style="grid-column:1/-1">
+        <label>Calorie Intake (kcal)</label>
+        <input type="number" [value]="dayData()?.calorieIntake" (change)="saveField('calorieIntake', $any($event.target).value)"
+          placeholder="e.g. 2000" min="0" max="9999">
+      </div>
+    </div>
+
+    <div class="macros-header">
+      <span class="macros-label">MACROS</span>
+      <div class="macro-mode-toggle">
+        <button class="unit-btn" [class.active]="macroMode()==='g'" (click)="macroMode.set('g')">g</button>
+        <button class="unit-btn" [class.active]="macroMode()==='%'" (click)="macroMode.set('%')">%</button>
+      </div>
+    </div>
+
     <div class="macros-grid">
       <div class="metric-input">
-        <label>Carbs (g)</label>
-        <input type="number" [value]="dayData()?.carbs" (change)="saveField('carbs', $any($event.target).value)" placeholder="150" min="0" max="999">
+        <label>Carbs {{ macroMode()==='%' ? '(%)' : '(g)' }}</label>
+        <input type="number"
+          [value]="macroMode()==='%' ? macroToPercent('carbs') : dayData()?.carbs"
+          (change)="saveMacro('carbs', $any($event.target).value)"
+          [placeholder]="macroMode()==='%' ? '45' : '150'" min="0" [max]="macroMode()==='%' ? '100' : '999'">
       </div>
       <div class="metric-input">
-        <label>Protein (g)</label>
-        <input type="number" [value]="dayData()?.protein" (change)="saveField('protein', $any($event.target).value)" placeholder="80" min="0" max="999">
+        <label>Protein {{ macroMode()==='%' ? '(%)' : '(g)' }}</label>
+        <input type="number"
+          [value]="macroMode()==='%' ? macroToPercent('protein') : dayData()?.protein"
+          (change)="saveMacro('protein', $any($event.target).value)"
+          [placeholder]="macroMode()==='%' ? '30' : '80'" min="0" [max]="macroMode()==='%' ? '100' : '999'">
       </div>
       <div class="metric-input">
-        <label>Fat (g)</label>
-        <input type="number" [value]="dayData()?.fat" (change)="saveField('fat', $any($event.target).value)" placeholder="40" min="0" max="999">
+        <label>Fat {{ macroMode()==='%' ? '(%)' : '(g)' }}</label>
+        <input type="number"
+          [value]="macroMode()==='%' ? macroToPercent('fat') : dayData()?.fat"
+          (change)="saveMacro('fat', $any($event.target).value)"
+          [placeholder]="macroMode()==='%' ? '25' : '40'" min="0" [max]="macroMode()==='%' ? '100' : '999'">
       </div>
     </div>
     <div *ngIf="macroSvg()" style="margin-top:12px" [innerHTML]="macroSvg()"></div>
@@ -59,10 +86,18 @@
   <div class="card">
     <div class="card-header"><div class="card-title">Pain &amp; Body</div></div>
     <div class="pain-slider">
-      <label>Pain Level &nbsp;<span class="pain-val">{{ dayData()?.pain || 0 }}/10 {{ painEmoji }}</span></label>
+      <div class="pain-label-row">
+        <label>Pain Level</label>
+        <div class="pain-badge" [style.background]="painColor()">
+          {{ dayData()?.pain || 0 }}<span>/10</span>
+        </div>
+      </div>
       <div class="pain-track">
         <input type="range" min="0" max="10" [value]="dayData()?.pain || 0"
           (input)="setPain(+$any($event.target).value)">
+      </div>
+      <div class="pain-scale-labels">
+        <span>No pain</span><span>Moderate</span><span>Severe</span>
       </div>
     </div>
     <div class="metric-input" style="margin-top:14px">
