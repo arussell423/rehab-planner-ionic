@@ -7,13 +7,10 @@
   padding-left: 4px;
   justify-content: center;
 }
-.brand-art {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 1.25rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: var(--primary);
-  line-height: 1;
+.brand-logo {
+  height: 32px;
+  width: auto;
+  display: block;
 }
 .brand-tag {
   font-size: 0.6rem;
