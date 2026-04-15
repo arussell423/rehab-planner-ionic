@@ -1,0 +1,95 @@
+<ion-modal [isOpen]="isOpen" (ionModalDidDismiss)="close()" [backdropDismiss]="false" class="session-modal">
+  <ng-template>
+    <div class="session-shell">
+
+      <!-- Header bar -->
+      <div class="session-header">
+        <button class="sess-close" (click)="close()">
+          <ion-icon name="close"></ion-icon>
+        </button>
+        <div class="sess-title">Workout Session</div>
+        <div class="sess-progress-label">{{ currentIndex() + 1 }} / {{ totalCount }}</div>
+      </div>
+
+      <!-- Top progress bar -->
+      <div class="sess-bar">
+        <div class="sess-bar-fill" [style.width.%]="progressPct"></div>
+      </div>
+
+      <!-- Main exercise card -->
+      <div class="sess-body" *ngIf="current">
+        <div class="sess-slot-label">{{ slotLabel(current.slot) }}</div>
+
+        <div class="sess-exercise-card" [class.is-done]="isCurrentDone">
+          <div class="sess-done-overlay" *ngIf="isCurrentDone">
+            <ion-icon name="checkmark-circle" class="sess-done-icon"></ion-icon>
+          </div>
+          <div class="sess-ex-name">{{ current.name }}</div>
+
+          <!-- Chips: sets/reps/weight/duration -->
+          <div class="sess-chips" *ngIf="activityChips(current)">
+            <span class="sess-chip">{{ activityChips(current) }}</span>
+          </div>
+
+          <!-- Notes -->
+          <div class="sess-notes" *ngIf="current.notes">{{ current.notes }}</div>
+        </div>
+
+        <!-- Complete toggle -->
+        <button class="sess-complete-btn" [class.done]="isCurrentDone" (click)="toggleCurrent()">
+          <ion-icon [name]="isCurrentDone ? 'checkmark-circle' : 'checkmark-circle-outline'"></ion-icon>
+          {{ isCurrentDone ? 'Completed ✓' : 'Mark Complete' }}
+        </button>
+      </div>
+
+      <!-- All done state -->
+      <div class="sess-body sess-finished" *ngIf="!current && totalCount === 0">
+        <div class="sess-finish-icon">🎉</div>
+        <div class="sess-finish-title">No activities</div>
+        <div class="sess-finish-sub">Add activities to your schedule first.</div>
+      </div>
+
+      <!-- Rest Timer section -->
+      <div class="sess-timer-section">
+        <div class="sess-timer-label">Rest Timer</div>
+        <div class="sess-timer-options">
+          <button *ngFor="let opt of REST_OPTIONS"
+            class="timer-opt-btn" [class.active]="restDuration() === opt"
+            (click)="setRestDuration(opt)">{{ opt }}s</button>
+        </div>
+        <div class="sess-timer-display" *ngIf="timerRunning()">
+          <div class="timer-countdown" [class.timer-low]="timerSeconds() <= 10">{{ formatTime(timerSeconds()) }}</div>
+        </div>
+        <button class="sess-timer-btn" [class.running]="timerRunning()"
+          (click)="timerRunning() ? stopTimer() : startTimer()">
+          <ion-icon [name]="timerRunning() ? 'close' : 'time-outline'"></ion-icon>
+          {{ timerRunning() ? 'Stop' : 'Start Rest Timer' }}
+        </button>
+      </div>
+
+      <!-- Nav: prev / next -->
+      <div class="sess-nav">
+        <button class="sess-nav-btn" (click)="prev()" [disabled]="isFirst">
+          <ion-icon name="chevron-back"></ion-icon> Prev
+        </button>
+        <div class="sess-dots">
+          <span *ngFor="let a of activities; let i = index"
+            class="sess-dot"
+            [class.active]="i === currentIndex()"
+            [class.done]="localCompleted()[a.key]">
+          </span>
+        </div>
+        <button class="sess-nav-btn" (click)="next()" [disabled]="isLast">
+          Next <ion-icon name="chevron-forward"></ion-icon>
+        </button>
+      </div>
+
+      <!-- Completion summary banner -->
+      <div class="sess-summary" *ngIf="completedCount > 0">
+        <ion-icon name="checkmark-circle" style="color:#22c55e"></ion-icon>
+        {{ completedCount }}/{{ totalCount }} done &nbsp;·&nbsp; {{ progressPct }}%
+      </div>
+
+    </div>
+  </ng-template>
+</ion-modal>

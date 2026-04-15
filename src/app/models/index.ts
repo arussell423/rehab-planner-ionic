@@ -4,6 +4,16 @@ export interface Profile {
   emoji: string;
   theme: 'sage' | 'teal' | 'blue' | 'green' | 'purple' | 'rose' | 'orange';
   appName: string;
+  currentPhaseId?: string;
+}
+
+export interface RehabPhase {
+  id: string;
+  name: string;
+  description: string;
+  color: string;
+  icon: string;
+  order: number;
 }
 
 export type ActivityCategory = 'strength' | 'flexibility' | 'mobility' | 'cardio' | 'balance' | 'pt_exercises' | 'other';

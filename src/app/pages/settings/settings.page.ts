@@ -5,8 +5,8 @@ import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton,
 import { ScheduleService } from '../../services/schedule.service';
 import { ProfileService } from '../../services/profile.service';
 import { ThemeService } from '../../services/theme.service';
-import { Profile } from '../../models';
-import { THEMES, AVATAR_EMOJIS, Theme } from '../../constants';
+import { Profile, RehabPhase } from '../../models';
+import { THEMES, AVATAR_EMOJIS, DEFAULT_PHASES, Theme } from '../../constants';
 import { ProfileModalComponent } from '../../components/profile-modal/profile-modal.component';
 
 @Component({
@@ -30,6 +30,8 @@ export class SettingsPage implements OnInit {
   themes = THEMES;
   avatarEmojis = AVATAR_EMOJIS;
   toast = signal<string>('');
+  currentPhase = signal<RehabPhase | null>(null);
+  allPhases = signal<RehabPhase[]>([]);
 
   constructor(
     private schedSvc: ScheduleService,
@@ -49,6 +51,8 @@ export class SettingsPage implements OnInit {
     this.isDark.set(this.themeSvc.isDark());
     this.medications.set(this.schedSvc.getMedications());
     this.weightUnit.set(this.schedSvc.getWeightUnit());
+    this.currentPhase.set(this.profileSvc.getCurrentPhase());
+    this.allPhases.set(this.profileSvc.getAllPhases());
   }
 
   setTheme(t: Theme): void {
@@ -149,5 +153,20 @@ export class SettingsPage implements OnInit {
       rose: '#e11d48', orange: '#ea580c', sage: '#6b9955'
     };
     return map[t] || '#6b9955';
+  }
+
+  setPhase(id: string): void {
+    this.profileSvc.setPhase(id);
+    this.currentPhase.set(this.profileSvc.getCurrentPhase());
+    this.showToast('Phase updated!');
+  }
+
+  advancePhase(): void {
+    const next = this.profileSvc.getNextPhase();
+    if (next) {
+      this.setPhase(next.id);
+    } else {
+      this.showToast('You\'re already at the final phase!');
+    }
   }
 }

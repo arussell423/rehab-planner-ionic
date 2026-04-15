@@ -78,6 +78,27 @@
     </div>
   </div>
 
+  <!-- Rehab Phase -->
+  <div class="settings-section">
+    <div class="settings-title">🏥 Rehab Phase</div>
+    <div class="phase-list">
+      <div *ngFor="let phase of allPhases()"
+        class="phase-option"
+        [class.active]="phase.id === currentPhase()?.id"
+        (click)="setPhase(phase.id)">
+        <div class="phase-dot" [style.background]="phase.color"></div>
+        <div class="phase-option-info">
+          <div class="phase-option-name">{{ phase.name }}</div>
+          <div class="phase-option-desc">{{ phase.description }}</div>
+        </div>
+        <div class="phase-check" *ngIf="phase.id === currentPhase()?.id">✓</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="margin-top:12px;width:100%" (click)="advancePhase()">
+      Advance to Next Phase →
+    </button>
+  </div>
+
   <!-- Data Management -->
   <div class="settings-section">
     <div class="settings-title">💾 Data</div>

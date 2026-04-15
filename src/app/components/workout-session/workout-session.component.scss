@@ -1,0 +1,260 @@
+.session-modal {
+  --height: 100%;
+  --width: 100%;
+  --border-radius: 0;
+}
+
+.session-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg);
+  overflow-y: auto;
+}
+
+.session-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 16px 12px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+
+.sess-close {
+  width: 36px; height: 36px;
+  background: var(--card-2); border: 1.5px solid var(--border);
+  border-radius: 50%; cursor: pointer; color: var(--text2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  ion-icon { font-size: 1.1rem; }
+}
+
+.sess-title {
+  flex: 1;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 1rem; font-weight: 700; color: var(--text);
+}
+
+.sess-progress-label {
+  font-size: 0.8rem; font-weight: 600; color: var(--text2);
+}
+
+.sess-bar {
+  height: 4px; background: var(--border); overflow: hidden;
+  .sess-bar-fill {
+    height: 100%; background: var(--primary);
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+}
+
+.sess-body {
+  flex: 1;
+  padding: 24px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sess-slot-label {
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--text2);
+}
+
+.sess-exercise-card {
+  position: relative;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 18px;
+  padding: 24px 20px;
+  text-align: center;
+  transition: border-color 0.25s, background 0.25s;
+  overflow: hidden;
+  min-height: 160px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+
+  &.is-done {
+    border-color: #22c55e;
+    background: rgba(34,197,94,0.06);
+  }
+}
+
+.sess-done-overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  .sess-done-icon {
+    font-size: 3.5rem; color: #22c55e; opacity: 0.25;
+  }
+}
+
+.sess-ex-name {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 1.5rem; font-weight: 800;
+  color: var(--text); letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.sess-chips {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;
+}
+
+.sess-chip {
+  background: var(--primary-l); color: var(--primary);
+  border: 1px solid var(--primary-m);
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 0.82rem; font-weight: 600;
+}
+
+.sess-notes {
+  font-size: 0.82rem; color: var(--text2);
+  font-style: italic; padding: 0 8px;
+  line-height: 1.5;
+}
+
+.sess-complete-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: 2px solid var(--border);
+  background: var(--card);
+  color: var(--text2);
+  font-size: 1rem; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  ion-icon { font-size: 1.3rem; }
+
+  &.done {
+    background: rgba(34,197,94,0.12);
+    border-color: #22c55e;
+    color: #16a34a;
+  }
+  &:not(.done):hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-l);
+  }
+}
+
+.sess-timer-section {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+.sess-timer-label {
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.5px; color: var(--text2);
+}
+
+.sess-timer-options {
+  display: flex; gap: 8px;
+}
+
+.timer-opt-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--card-2);
+  color: var(--text2);
+  font-size: 0.8rem; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  &.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+}
+
+.sess-timer-display {
+  text-align: center;
+  .timer-countdown {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: 2.5rem; font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.04em;
+    transition: color 0.3s;
+    &.timer-low { color: #ef4444; }
+  }
+}
+
+.sess-timer-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  background: var(--card-2);
+  color: var(--text);
+  font-size: 0.9rem; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  ion-icon { font-size: 1.1rem; }
+  &.running {
+    background: rgba(239,68,68,0.1);
+    border-color: #ef4444;
+    color: #ef4444;
+  }
+  &:not(.running):hover {
+    background: var(--primary-l);
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+}
+
+.sess-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  gap: 12px;
+}
+
+.sess-nav-btn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--text2);
+  font-size: 0.9rem; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  ion-icon { font-size: 1rem; }
+  &:disabled { opacity: 0.35; cursor: not-allowed; }
+  &:not(:disabled):hover { border-color: var(--primary); color: var(--primary); background: var(--primary-l); }
+}
+
+.sess-dots {
+  display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; max-width: 160px;
+}
+
+.sess-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--border);
+  transition: all 0.2s;
+  &.active { background: var(--primary); transform: scale(1.4); }
+  &.done { background: #22c55e; }
+}
+
+.sess-summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem; font-weight: 600; color: var(--text2);
+  ion-icon { font-size: 1rem; }
+}
+
+.sess-finished {
+  align-items: center; justify-content: center; text-align: center;
+  .sess-finish-icon { font-size: 4rem; }
+  .sess-finish-title { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--text); }
+  .sess-finish-sub { font-size: 0.88rem; color: var(--text2); }
+}

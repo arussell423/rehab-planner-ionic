@@ -1,3 +1,12 @@
+import { RehabPhase } from '../models';
+
+export const DEFAULT_PHASES: RehabPhase[] = [
+  { id: 'pain_relief',     name: 'Pain Relief',      description: 'Reduce inflammation and manage acute symptoms',         color: '#ef4444', icon: 'heart',          order: 1 },
+  { id: 'mobility',        name: 'Mobility & ROM',   description: 'Restore range of motion and movement patterns',          color: '#f59e0b', icon: 'repeat-outline',  order: 2 },
+  { id: 'strength',        name: 'Strength',         description: 'Build load tolerance and functional strength',           color: '#3b82f6', icon: 'barbell',         order: 3 },
+  { id: 'return_to_sport', name: 'Return to Sport',  description: 'Sport-specific training and full performance recovery',  color: '#22c55e', icon: 'trophy-outline',   order: 4 },
+];
+
 export const REST_QUOTES = [
   "Rest is not quitting — it's fueling your comeback. 💪",
   "Champions are built in recovery. 🏆",

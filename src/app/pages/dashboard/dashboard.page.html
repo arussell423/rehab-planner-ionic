@@ -30,7 +30,17 @@
     </button>
   </div>
 
-  <!-- Hero ring + stats -->
+  <!-- Phase badge -->
+  <div class="phase-banner" *ngIf="currentPhase()" (click)="goTo('/settings')">
+    <div class="phase-dot" [style.background]="currentPhase()!.color"></div>
+    <div class="phase-info">
+      <div class="phase-label">Current Phase</div>
+      <div class="phase-name">{{ currentPhase()!.name }}</div>
+    </div>
+    <div class="phase-arrow">›</div>
+  </div>
+
+  <!-- Hero: ring + readiness + streak -->
   <div class="hero-section">
     <div class="ring-wrap">
       <svg viewBox="0 0 120 120" class="ring-svg">
@@ -38,13 +48,14 @@
         <circle cx="60" cy="60" r="50" fill="none" stroke="var(--primary)" stroke-width="10"
           stroke-linecap="round"
           stroke-dasharray="314"
-          [attr.stroke-dashoffset]="314 - (314 * donePct() / 100)"
+          [attr.stroke-dashoffset]="isRestDay() ? 314 : 314 - (314 * donePct() / 100)"
           transform="rotate(-90 60 60)"
           style="transition: stroke-dashoffset 0.6s cubic-bezier(0.4,0,0.2,1)"/>
       </svg>
       <div class="ring-inner">
-        <div class="ring-pct">{{ donePct() }}%</div>
-        <div class="ring-sub">done</div>
+        <div class="ring-pct" *ngIf="!isRestDay()">{{ donePct() }}%</div>
+        <div class="ring-pct" *ngIf="isRestDay()" style="font-size:1.8rem">💤</div>
+        <div class="ring-sub">{{ isRestDay() ? 'rest' : 'done' }}</div>
       </div>
     </div>
 
@@ -59,16 +70,53 @@
         <div class="hstat-val">{{ doneCount() }}/{{ totalCount() }}</div>
         <div class="hstat-label">Activities</div>
       </div>
+      <div class="hstat" *ngIf="todaySteps()">
+        <ion-icon name="walk" class="hstat-icon"></ion-icon>
+        <div class="hstat-val">{{ todaySteps() }}</div>
+        <div class="hstat-label">Steps</div>
+      </div>
     </div>
   </div>
 
+  <!-- Readiness score card -->
+  <div class="readiness-card">
+    <div class="readiness-left">
+      <div class="readiness-title">Readiness Score</div>
+      <div class="readiness-sub">Based on sleep &amp; pain data</div>
+    </div>
+    <div class="readiness-badge" [style.background]="readiness().color + '20'" [style.border-color]="readiness().color + '55'">
+      <div class="readiness-score" [style.color]="readiness().color">{{ readiness().score }}</div>
+      <div class="readiness-label" [style.color]="readiness().color">{{ readiness().label }}</div>
+    </div>
+  </div>
+
+  <!-- Start Session CTA (if not rest day and has activities) -->
+  <button class="start-session-btn" *ngIf="!isRestDay() && totalCount() > 0" (click)="goTo('/schedule')">
+    <ion-icon name="play-circle-outline"></ion-icon>
+    Start Today's Session
+    <span class="sess-count">{{ doneCount() }}/{{ totalCount() }}</span>
+  </button>
+
   <!-- Navigation cards -->
+  <div class="nav-card" (click)="goTo('/schedule')">
+    <div class="nav-card-icon-wrap accent-primary">
+      <ion-icon name="calendar-outline"></ion-icon>
+    </div>
+    <div class="nav-card-info">
+      <div class="nav-card-title">Today's Schedule</div>
+      <div class="nav-card-sub" *ngIf="!isRestDay()">{{ doneCount() }}/{{ totalCount() }} activities</div>
+      <div class="nav-card-sub" *ngIf="isRestDay()">Rest &amp; Recovery</div>
+    </div>
+    <ion-icon name="chevron-forward" class="nav-arrow"></ion-icon>
+  </div>
+
   <div class="nav-card" (click)="goTo('/activities')">
     <div class="nav-card-icon-wrap accent-teal">
       <ion-icon name="barbell"></ion-icon>
     </div>
     <div class="nav-card-info">
       <div class="nav-card-title">Activities</div>
+      <div class="nav-card-sub">Browse &amp; add exercises</div>
     </div>
     <ion-icon name="chevron-forward" class="nav-arrow"></ion-icon>
   </div>
@@ -79,6 +127,8 @@
     </div>
     <div class="nav-card-info">
       <div class="nav-card-title">Daily Metrics</div>
+      <div class="nav-card-sub" *ngIf="todayPain() > 0">Pain: {{ todayPain() }}/10</div>
+      <div class="nav-card-sub" *ngIf="!todayPain()">Steps, pain, nutrition</div>
     </div>
     <ion-icon name="chevron-forward" class="nav-arrow"></ion-icon>
   </div>
@@ -89,6 +139,7 @@
     </div>
     <div class="nav-card-info">
       <div class="nav-card-title">Progress</div>
+      <div class="nav-card-sub">Streak, records &amp; charts</div>
     </div>
     <ion-icon name="chevron-forward" class="nav-arrow"></ion-icon>
   </div>
@@ -99,6 +150,7 @@
     </div>
     <div class="nav-card-info">
       <div class="nav-card-title">History</div>
+      <div class="nav-card-sub">8-week trends</div>
     </div>
     <ion-icon name="chevron-forward" class="nav-arrow"></ion-icon>
   </div>

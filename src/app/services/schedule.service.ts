@@ -233,6 +233,33 @@ export class ScheduleService {
     return this.getStreak().current;
   }
 
+  getReadinessScore(dayName: string): { score: number; label: string; color: string } {
+    const data = this.getDayData(dayName);
+
+    // Pain component: no pain(0) = 40pts, max pain(10) = 0pts. Unknown = 20pts.
+    const painScore = data.pain != null && data.pain !== 0
+      ? (10 - Math.min(data.pain, 10)) * 4
+      : data.pain === 0 && data.steps ? 40 : 20;
+
+    // Sleep quality component: 5 stars = 40pts. Unknown = 20pts.
+    const sleepQualityScore = data.sleep ? (data.sleep / 5) * 40 : 20;
+
+    // Sleep hours component: 8+ hours = 20pts. Unknown = 10pts.
+    const sleepHrs = parseFloat(data.sleepHrs) || 0;
+    const sleepHrsScore = sleepHrs > 0 ? Math.min(sleepHrs / 8, 1) * 20 : 10;
+
+    const score = Math.round(painScore + sleepQualityScore + sleepHrsScore);
+
+    let label: string;
+    let color: string;
+    if (score >= 80)      { label = 'High';     color = '#22c55e'; }
+    else if (score >= 60) { label = 'Good';     color = '#84cc16'; }
+    else if (score >= 40) { label = 'Moderate'; color = '#f59e0b'; }
+    else                  { label = 'Low';      color = '#ef4444'; }
+
+    return { score, label, color };
+  }
+
   addStructuredActivity(dayName: string, activity: Activity): void {
     const schedule = this.getSchedule();
     const dayIdx = schedule.findIndex(s => s.day === dayName);

@@ -2,18 +2,19 @@ import { Component, OnInit, signal } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle } from '@ionic/angular/standalone';
+import { IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonIcon } from '@ionic/angular/standalone';
 import { ScheduleService } from '../../services/schedule.service';
 import { ProfileService } from '../../services/profile.service';
 import { DayData, DaySchedule } from '../../models';
 import { REST_QUOTES, PAIN_EMOJIS, TEMPLATES } from '../../constants';
+import { WorkoutSessionComponent, SessionActivity } from '../../components/workout-session/workout-session.component';
 
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.page.html',
   styleUrls: ['./schedule.page.scss'],
   standalone: true,
-  imports: [IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle, NgFor, NgIf, FormsModule]
+  imports: [IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonIcon, NgFor, NgIf, FormsModule, WorkoutSessionComponent]
 })
 export class SchedulePage implements OnInit {
   private readonly DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -40,6 +41,8 @@ export class SchedulePage implements OnInit {
   allSchedule = signal<DaySchedule[]>([]);
   macroSvg = signal<SafeHtml>('');
   allDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  showSession = signal<boolean>(false);
+  sessionActivities = signal<SessionActivity[]>([]);
 
   constructor(private schedSvc: ScheduleService, private profileSvc: ProfileService, private sanitizer: DomSanitizer) {}
 
@@ -261,5 +264,39 @@ export class SchedulePage implements OnInit {
 
   isActivityDone(key: string): boolean {
     return !!(this.dayData()?.activities?.[key]);
+  }
+
+  startSession(): void {
+    const sched = this.todaySchedule();
+    if (!sched) return;
+    const activities: SessionActivity[] = [];
+    (['morning', 'afternoon', 'evening'] as const).forEach(slot => {
+      const slotActs: string[] = (sched as any)[slot] || [];
+      slotActs.forEach((name, i) => {
+        const key = this.activityKey(this.selectedDay(), slot, i);
+        const structured = (sched.activities || []).find(a => a.name === name && a.timeOfDay === slot);
+        activities.push({
+          key,
+          name,
+          slot,
+          completed: this.isActivityDone(key),
+          sets: structured?.sets,
+          reps: structured?.reps,
+          duration: structured?.duration,
+          weightLoad: structured?.weightLoad,
+          notes: structured?.notes,
+        });
+      });
+    });
+    this.sessionActivities.set(activities);
+    this.showSession.set(true);
+  }
+
+  onSessionActivityToggled(event: { key: string; completed: boolean }): void {
+    this.toggleActivity(event.key, event.completed);
+  }
+
+  onSessionClosed(): void {
+    this.showSession.set(false);
   }
 }

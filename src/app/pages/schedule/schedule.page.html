@@ -18,6 +18,13 @@
     <div class="progress-fill" [style.width.%]="donePct()"></div>
   </div>
 
+  <!-- Start Session button -->
+  <button class="start-session-cta" *ngIf="!todaySchedule()?.rest && totalCount() > 0" (click)="startSession()">
+    <ion-icon name="play-circle-outline"></ion-icon>
+    Start Session
+    <span class="session-progress-chip">{{ doneCount() }}/{{ totalCount() }}</span>
+  </button>
+
   <!-- Rest Day Quote -->
   <div class="rest-quote" *ngIf="todaySchedule()?.rest">{{ restQuote() }}</div>
 
@@ -207,5 +214,13 @@
       </ion-content>
     </ng-template>
   </ion-modal>
+
+  <!-- Workout Session Player -->
+  <app-workout-session
+    [isOpen]="showSession()"
+    [activities]="sessionActivities()"
+    (activityToggled)="onSessionActivityToggled($event)"
+    (closed)="onSessionClosed()">
+  </app-workout-session>
 
 </ion-content>

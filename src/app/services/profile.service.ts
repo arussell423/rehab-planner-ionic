@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { StorageService } from './storage.service';
-import { Profile } from '../models';
-import { DEFAULT_SCHEDULE, Theme } from '../constants';
+import { Profile, RehabPhase } from '../models';
+import { DEFAULT_SCHEDULE, DEFAULT_PHASES, Theme } from '../constants';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
@@ -64,6 +64,25 @@ export class ProfileService {
 
   isFirstLaunch(): boolean {
     return !this.storage.has('rp_profiles');
+  }
+
+  getCurrentPhase(): RehabPhase {
+    const profile = this.getActiveProfile();
+    const id = profile.currentPhaseId || 'pain_relief';
+    return DEFAULT_PHASES.find(p => p.id === id) || DEFAULT_PHASES[0];
+  }
+
+  setPhase(phaseId: string): void {
+    this.updateProfile(this.activeProfileId(), { currentPhaseId: phaseId });
+  }
+
+  getNextPhase(): RehabPhase | null {
+    const current = this.getCurrentPhase();
+    return DEFAULT_PHASES.find(p => p.order === current.order + 1) || null;
+  }
+
+  getAllPhases(): RehabPhase[] {
+    return DEFAULT_PHASES;
   }
 
   scheduleKey(): string {
