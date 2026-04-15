@@ -1,0 +1,18 @@
+<div class="pin-overlay">
+  <div class="pin-card">
+    <div class="pin-icon">🔒</div>
+    <div class="pin-title">App Locked</div>
+    <div class="pin-sub">Enter your PIN to continue</div>
+
+    <div class="pin-dots" [class.shake]="shake()">
+      <div class="pin-dot" *ngFor="let filled of dots" [class.filled]="filled"></div>
+    </div>
+    <div class="pin-error" *ngIf="error()">Incorrect PIN</div>
+
+    <div class="pin-grid">
+      <button *ngFor="let d of DIGITS" class="pin-key" [class.backspace]="d === '⌫'" [class.empty]="d === ''" (click)="press(d)">
+        {{ d }}
+      </button>
+    </div>
+  </div>
+</div>

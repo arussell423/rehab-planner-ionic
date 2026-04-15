@@ -99,13 +99,19 @@
     <!-- Macro donut -->
     <div *ngIf="macroSvg()" style="margin-bottom:16px" [innerHTML]="macroSvg()"></div>
 
-    <!-- Pain Slider -->
-    <div class="pain-slider">
-      <label>Pain Level &nbsp;<span class="pain-val">{{ dayData()?.pain || 0 }}/10 {{ painEmoji }}</span></label>
-      <div class="pain-track">
-        <input type="range" min="0" max="10" [value]="dayData()?.pain || 0"
-          (input)="setPain(+$any($event.target).value)">
+    <!-- Pain Level + Body Map -->
+    <div class="pain-section">
+      <div class="pain-slider">
+        <label>Pain Level &nbsp;<span class="pain-val">{{ dayData()?.pain || 0 }}/10 {{ painEmoji }}</span></label>
+        <div class="pain-track">
+          <input type="range" min="0" max="10" [value]="dayData()?.pain || 0"
+            (input)="setPain(+$any($event.target).value)">
+        </div>
       </div>
+      <app-body-map
+        [painAreas]="dayData()?.painAreas || []"
+        (painAreasChange)="savePainAreas($event)">
+      </app-body-map>
     </div>
 
     <!-- Weight -->

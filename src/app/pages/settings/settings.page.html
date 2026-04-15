@@ -78,6 +78,65 @@
     </div>
   </div>
 
+  <!-- App Security -->
+  <div class="settings-section">
+    <div class="settings-title">🔒 App Security (PIN Lock)</div>
+    <div *ngIf="!pinSet()">
+      <p style="font-size:0.85rem;color:var(--text2);margin-bottom:10px">
+        Set a 4-digit PIN to lock the app on startup and protect your health data.
+      </p>
+      <div class="add-activity-row">
+        <input class="edit-input" type="number" placeholder="Enter 4-digit PIN"
+          [ngModel]="newPin()" (ngModelChange)="newPin.set($event)" maxlength="4">
+        <button class="btn btn-primary" (click)="setPin(newPin())">Set PIN</button>
+      </div>
+    </div>
+    <div *ngIf="pinSet()" class="pin-active-info">
+      <span>✅ PIN lock is active</span>
+      <button class="btn btn-secondary" style="color:var(--warn)" (click)="clearPin()">Remove PIN</button>
+    </div>
+  </div>
+
+  <!-- Notifications -->
+  <div class="settings-section">
+    <div class="settings-title">🔔 Reminders</div>
+    <div *ngIf="!notifGranted()" class="notif-prompt">
+      <p style="font-size:0.85rem;color:var(--text2);margin-bottom:10px">
+        Get daily reminders for your morning, afternoon and evening exercises.
+      </p>
+      <button class="btn btn-primary" style="width:100%" (click)="requestNotifPermission()">
+        Enable Notifications
+      </button>
+    </div>
+    <div *ngIf="notifGranted()">
+      <ion-item lines="none" class="dark-mode-item" style="margin-bottom:10px">
+        <ion-label>Enable daily reminders</ion-label>
+        <ion-toggle slot="end"
+          [checked]="notifSvc.prefs().enabled"
+          (ionChange)="saveNotifPrefs('enabled', $any($event).detail.checked)"
+          color="primary">
+        </ion-toggle>
+      </ion-item>
+      <div *ngIf="notifSvc.prefs().enabled" class="notif-times">
+        <div class="notif-time-row">
+          <label>🌅 Morning</label>
+          <input type="time" [value]="notifSvc.prefs().morningTime"
+            (change)="saveNotifPrefs('morningTime', $any($event.target).value)">
+        </div>
+        <div class="notif-time-row">
+          <label>☀️ Afternoon</label>
+          <input type="time" [value]="notifSvc.prefs().afternoonTime"
+            (change)="saveNotifPrefs('afternoonTime', $any($event.target).value)">
+        </div>
+        <div class="notif-time-row">
+          <label>🌙 Evening</label>
+          <input type="time" [value]="notifSvc.prefs().eveningTime"
+            (change)="saveNotifPrefs('eveningTime', $any($event.target).value)">
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Rehab Phase -->
   <div class="settings-section">
     <div class="settings-title">🏥 Rehab Phase</div>
@@ -110,8 +169,10 @@
       </label>
       <button class="btn btn-secondary" (click)="exportCSV()">📊 Export CSV</button>
       <button class="btn btn-secondary" (click)="printSchedule()">🖨️ Print Schedule</button>
+      <button class="btn btn-secondary" (click)="generateReport()">📋 Generate Therapist Report</button>
       <button class="btn btn-secondary" style="color:var(--warn)" (click)="resetSchedule()">⚠️ Reset Schedule</button>
       <button class="btn btn-secondary" style="color:var(--danger)" (click)="clearWeekData()">🗑 Clear Week Data</button>
+      <button class="btn btn-secondary" style="color:var(--danger);font-weight:700;border-color:var(--danger)" (click)="deleteAllData()">🗑 Delete All My Data (GDPR)</button>
     </div>
   </div>
 

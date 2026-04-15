@@ -57,6 +57,7 @@ export interface DayData {
   sleepHrs: string;
   sleep: number;
   pain: number;
+  painAreas?: string[];
   weight: string;
   weightUnit: 'kg' | 'lbs';
   meds: Record<string, boolean>;

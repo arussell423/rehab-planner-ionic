@@ -1,0 +1,54 @@
+<!-- Trigger button — rendered inline wherever selector is placed -->
+<button class="rm-trigger-btn" (click)="open()">
+  <span class="rm-icon">💪</span>
+  <span>1RM Calculator</span>
+</button>
+
+<ion-modal [isOpen]="isOpen()" (ionModalDidDismiss)="close()" [breakpoints]="[0, 0.85]" [initialBreakpoint]="0.85">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>1RM Calculator</ion-title>
+        <ion-buttons slot="end"><ion-button (click)="close()">✕</ion-button></ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+
+      <p class="rm-subtitle">Estimate your one-rep max using the Epley formula.</p>
+
+      <div class="rm-inputs">
+        <div class="rm-field">
+          <label>Weight lifted</label>
+          <div class="rm-row">
+            <input type="number" [ngModel]="weight()" (ngModelChange)="weight.set($event); calculate()"
+              placeholder="e.g. 80" min="1" max="1000">
+            <div class="unit-toggle">
+              <button [class.active]="unit()==='kg'" (click)="setUnit('kg')">kg</button>
+              <button [class.active]="unit()==='lbs'" (click)="setUnit('lbs')">lbs</button>
+            </div>
+          </div>
+        </div>
+        <div class="rm-field">
+          <label>Reps performed</label>
+          <input type="number" [ngModel]="reps()" (ngModelChange)="reps.set($event); calculate()"
+            placeholder="e.g. 8" min="1" max="30">
+        </div>
+      </div>
+
+      <div class="rm-result" *ngIf="oneRm()">
+        <div class="rm-result-label">Estimated 1RM</div>
+        <div class="rm-result-val">{{ oneRm() }} <span class="rm-unit">{{ unit() }}</span></div>
+      </div>
+
+      <div class="rm-table" *ngIf="table().length">
+        <div class="rm-table-header">
+          <span>% of 1RM</span><span>Weight ({{ unit() }})</span>
+        </div>
+        <div class="rm-table-row" *ngFor="let row of table()" [class.highlight]="row.pct === 100">
+          <span>{{ row.pct }}%</span><span>{{ row.weight }}</span>
+        </div>
+      </div>
+
+    </ion-content>
+  </ng-template>
+</ion-modal>

@@ -8,13 +8,14 @@ import { ProfileService } from '../../services/profile.service';
 import { DayData, DaySchedule } from '../../models';
 import { REST_QUOTES, PAIN_EMOJIS, TEMPLATES } from '../../constants';
 import { WorkoutSessionComponent, SessionActivity } from '../../components/workout-session/workout-session.component';
+import { BodyMapComponent } from '../../components/body-map/body-map.component';
 
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.page.html',
   styleUrls: ['./schedule.page.scss'],
   standalone: true,
-  imports: [IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonIcon, NgFor, NgIf, FormsModule, WorkoutSessionComponent]
+  imports: [IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonIcon, NgFor, NgIf, FormsModule, WorkoutSessionComponent, BodyMapComponent]
 })
 export class SchedulePage implements OnInit {
   private readonly DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -251,6 +252,12 @@ export class SchedulePage implements OnInit {
   setWeightUnit(unit: 'kg' | 'lbs'): void {
     this.weightUnit.set(unit);
     this.schedSvc.saveWeightUnit(unit);
+  }
+
+  savePainAreas(areas: string[]): void {
+    const data = { ...this.dayData()!, painAreas: areas };
+    this.dayData.set(data as any);
+    this.schedSvc.saveDayData(this.selectedDay(), data as any);
   }
 
   setCopyTarget(day: string, checked: boolean): void {

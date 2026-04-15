@@ -7,12 +7,13 @@ import { ScheduleService } from '../../services/schedule.service';
 import { HealthService } from '../../services/health.service';
 import { DayData } from '../../models';
 import { PAIN_EMOJIS } from '../../constants';
+import { OneRmCalculatorComponent } from '../../components/one-rm-calculator/one-rm-calculator.component';
 @Component({
   selector: 'app-metrics',
   templateUrl: './metrics.page.html',
   styleUrls: ['./metrics.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonButton, IonIcon, NgFor, NgIf]
+  imports: [IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonButton, IonIcon, NgFor, NgIf, OneRmCalculatorComponent]
 })
 export class MetricsPage implements OnInit {
   private readonly DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];

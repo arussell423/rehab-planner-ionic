@@ -91,3 +91,20 @@
 .phase-check {
   font-size: 1rem; font-weight: 800; color: var(--primary);
 }
+
+.pin-active-info {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px; background: rgba(34,197,94,0.1);
+  border: 1.5px solid rgba(34,197,94,0.3);
+  border-radius: var(--rs);
+  span { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+}
+
+.notif-prompt { }
+.notif-times { display: flex; flex-direction: column; gap: 10px; }
+.notif-time-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px; background: var(--bg); border-radius: var(--rs);
+  label { font-size: 0.9rem; font-weight: 500; color: var(--text); }
+  input[type="time"] { padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font-size: 0.9rem; }
+}

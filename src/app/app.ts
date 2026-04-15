@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -13,14 +14,22 @@ import {
   checkmarkCircleOutline, playCircleOutline
 } from 'ionicons/icons';
 import { ThemeService } from './services/theme.service';
+import { PinLockComponent } from './components/pin-lock/pin-lock.component';
 
 @Component({
   selector: 'app-root',
-  template: `<ion-app><ion-router-outlet></ion-router-outlet></ion-app>`,
+  template: `
+    <app-pin-lock *ngIf="showLock()" (unlocked)="onUnlocked()"></app-pin-lock>
+    <ion-app [style.display]="showLock() ? 'none' : ''">
+      <ion-router-outlet></ion-router-outlet>
+    </ion-app>
+  `,
   standalone: true,
-  imports: [IonApp, IonRouterOutlet]
+  imports: [IonApp, IonRouterOutlet, NgIf, PinLockComponent]
 })
 export class App implements OnInit {
+  showLock = signal<boolean>(false);
+
   constructor(private themeSvc: ThemeService) {
     addIcons({
       barbell, flame, walk, statsChart, calendarOutline, settingsOutline,
@@ -34,5 +43,14 @@ export class App implements OnInit {
       checkmarkCircleOutline, playCircleOutline
     });
   }
-  ngOnInit() { this.themeSvc.apply(); }
+
+  ngOnInit() {
+    this.themeSvc.apply();
+    const pin = localStorage.getItem('rp_pin');
+    if (pin) this.showLock.set(true);
+  }
+
+  onUnlocked(): void {
+    this.showLock.set(false);
+  }
 }

@@ -5,6 +5,7 @@ import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton,
 import { ScheduleService } from '../../services/schedule.service';
 import { ProfileService } from '../../services/profile.service';
 import { ThemeService } from '../../services/theme.service';
+import { NotificationService, NotificationPrefs } from '../../services/notification.service';
 import { Profile, RehabPhase } from '../../models';
 import { THEMES, AVATAR_EMOJIS, DEFAULT_PHASES, Theme } from '../../constants';
 import { ProfileModalComponent } from '../../components/profile-modal/profile-modal.component';
@@ -17,6 +18,9 @@ import { ProfileModalComponent } from '../../components/profile-modal/profile-mo
   imports: [IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonToggle, IonItem, IonLabel, IonIcon, NgFor, NgIf, FormsModule, ProfileModalComponent]
 })
 export class SettingsPage implements OnInit {
+  pinSet = signal<boolean>(false);
+  newPin = signal<string>('');
+  notifGranted = signal<boolean>(false);
   profiles = signal<Profile[]>([]);
   activeProfileId = signal<string>('default');
   currentTheme = signal<Theme>('blue');
@@ -36,7 +40,8 @@ export class SettingsPage implements OnInit {
   constructor(
     private schedSvc: ScheduleService,
     public profileSvc: ProfileService,
-    public themeSvc: ThemeService
+    public themeSvc: ThemeService,
+    public notifSvc: NotificationService
   ) {}
 
   ngOnInit(): void { this.load(); }
@@ -53,6 +58,8 @@ export class SettingsPage implements OnInit {
     this.weightUnit.set(this.schedSvc.getWeightUnit());
     this.currentPhase.set(this.profileSvc.getCurrentPhase());
     this.allPhases.set(this.profileSvc.getAllPhases());
+    this.pinSet.set(!!localStorage.getItem('rp_pin'));
+    this.notifGranted.set(this.notifSvc.permissionState === 'granted');
   }
 
   setTheme(t: Theme): void {
@@ -168,5 +175,53 @@ export class SettingsPage implements OnInit {
     } else {
       this.showToast('You\'re already at the final phase!');
     }
+  }
+
+  deleteAllData(): void {
+    if (confirm('⚠️ This will permanently delete ALL your data — schedules, metrics, history and profiles. This cannot be undone.\n\nAre you absolutely sure?')) {
+      if (confirm('Last chance — delete everything?')) {
+        this.schedSvc.deleteAllData();
+        window.location.reload();
+      }
+    }
+  }
+
+  generateReport(): void {
+    const profile = this.profileSvc.getActiveProfile();
+    const phase = this.profileSvc.getCurrentPhase();
+    this.schedSvc.generateTherapistReport(profile.name, phase.name);
+  }
+
+  setPin(pin: string): void {
+    const trimmed = pin.trim();
+    if (!/^\d{4}$/.test(trimmed)) { this.showToast('PIN must be exactly 4 digits'); return; }
+    localStorage.setItem('rp_pin', trimmed);
+    this.pinSet.set(true);
+    this.newPin.set('');
+    this.showToast('PIN set successfully');
+  }
+
+  clearPin(): void {
+    if (confirm('Remove app PIN lock?')) {
+      localStorage.removeItem('rp_pin');
+      this.pinSet.set(false);
+      this.showToast('PIN removed');
+    }
+  }
+
+  async requestNotifPermission(): Promise<void> {
+    const result = await this.notifSvc.requestPermission();
+    this.notifGranted.set(result === 'granted');
+    if (result === 'granted') {
+      this.notifSvc.scheduleForToday();
+      this.showToast('Notifications enabled!');
+    } else {
+      this.showToast('Notification permission denied');
+    }
+  }
+
+  saveNotifPrefs(field: keyof NotificationPrefs, value: any): void {
+    const updated = { ...this.notifSvc.prefs(), [field]: value };
+    this.notifSvc.savePrefs(updated);
   }
 }

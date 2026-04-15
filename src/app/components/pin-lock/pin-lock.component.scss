@@ -1,0 +1,54 @@
+.pin-overlay {
+  position: fixed; inset: 0; z-index: 99999;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.pin-card {
+  text-align: center;
+  padding: 32px 24px;
+  max-width: 320px; width: 100%;
+}
+
+.pin-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.pin-title { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--text); }
+.pin-sub { font-size: 0.85rem; color: var(--text2); margin-top: 6px; margin-bottom: 28px; }
+
+.pin-dots {
+  display: flex; justify-content: center; gap: 16px; margin-bottom: 8px;
+  &.shake { animation: shake 0.5s ease; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+.pin-dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid var(--primary);
+  background: transparent;
+  transition: background 0.15s;
+  &.filled { background: var(--primary); }
+}
+
+.pin-error { font-size: 0.82rem; color: #ef4444; font-weight: 600; margin-bottom: 16px; min-height: 1.2em; }
+
+.pin-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 24px;
+}
+
+.pin-key {
+  padding: 18px; border-radius: 50%; border: 1.5px solid var(--border);
+  background: var(--card); color: var(--text);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 1.3rem; font-weight: 700; cursor: pointer;
+  transition: all 0.15s; aspect-ratio: 1;
+  &:hover:not(.empty) { background: var(--primary-l); border-color: var(--primary); color: var(--primary); }
+  &:active:not(.empty) { transform: scale(0.92); }
+  &.empty { border-color: transparent; background: transparent; cursor: default; }
+  &.backspace { font-size: 1.1rem; color: var(--text2); }
+}

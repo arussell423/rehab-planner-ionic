@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "deploy": "ng build --base-href /rehab-planner-ionic/ && npx gh-pages -d dist/rehab-planner-ionic/browser"
   },
   "private": true,
   "packageManager": "npm@11.11.0",
