@@ -64,7 +64,7 @@
       </div>
     </div>
     <div class="add-activity-row" style="margin-top:8px">
-      <input class="edit-input" [(ngModel)]="newMed" placeholder="Add medication..." (keyup.enter)="addMed()">
+      <input class="edit-input" [ngModel]="newMed()" (ngModelChange)="newMed.set($event)" placeholder="Add medication..." (keyup.enter)="addMed()">
       <button class="btn btn-primary" (click)="addMed()">Add</button>
     </div>
   </div>
@@ -86,8 +86,8 @@
         Set a 4-digit PIN to lock the app on startup and protect your health data.
       </p>
       <div class="add-activity-row">
-        <input class="edit-input" type="number" placeholder="Enter 4-digit PIN"
-          [ngModel]="newPin()" (ngModelChange)="newPin.set($event)" maxlength="4">
+        <input class="edit-input" type="text" inputmode="numeric" placeholder="Enter 4-digit PIN"
+          maxlength="4" [ngModel]="newPin()" (ngModelChange)="newPin.set($event)">
         <button class="btn btn-primary" (click)="setPin(newPin())">Set PIN</button>
       </div>
     </div>

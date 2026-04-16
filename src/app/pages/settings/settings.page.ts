@@ -189,7 +189,7 @@ export class SettingsPage implements OnInit {
   generateReport(): void {
     const profile = this.profileSvc.getActiveProfile();
     const phase = this.profileSvc.getCurrentPhase();
-    this.schedSvc.generateTherapistReport(profile.name, phase.name);
+    this.schedSvc.generateTherapistReport(profile.name, phase?.name ?? 'Not set');
   }
 
   setPin(pin: string): void {

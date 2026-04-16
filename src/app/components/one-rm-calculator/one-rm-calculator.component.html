@@ -20,7 +20,7 @@
         <div class="rm-field">
           <label>Weight lifted</label>
           <div class="rm-row">
-            <input type="number" [ngModel]="weight()" (ngModelChange)="weight.set($event); calculate()"
+            <input type="number" [value]="weight() ?? ''" (input)="weight.set(+$any($event.target).value || null); calculate()"
               placeholder="e.g. 80" min="1" max="1000">
             <div class="unit-toggle">
               <button [class.active]="unit()==='kg'" (click)="setUnit('kg')">kg</button>
@@ -30,7 +30,7 @@
         </div>
         <div class="rm-field">
           <label>Reps performed</label>
-          <input type="number" [ngModel]="reps()" (ngModelChange)="reps.set($event); calculate()"
+          <input type="number" [value]="reps() ?? ''" (input)="reps.set(+$any($event.target).value || null); calculate()"
             placeholder="e.g. 8" min="1" max="30">
         </div>
       </div>
