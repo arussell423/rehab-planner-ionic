@@ -1,8 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import {
-  IonTabs, IonTabBar, IonTabButton, IonLabel,
-  IonHeader, IonToolbar, IonTitle, IonButtons, IonButton
-} from '@ionic/angular/standalone';
+import { IonTabs, IonTabBar, IonTabButton, IonLabel } from '@ionic/angular/standalone';
 import { NgFor, NgIf } from '@angular/common';
 import { ProfileService } from '../../services/profile.service';
 import { ThemeService } from '../../services/theme.service';
@@ -16,7 +13,6 @@ import { OnboardingModalComponent } from '../../components/onboarding-modal/onbo
   standalone: true,
   imports: [
     IonTabs, IonTabBar, IonTabButton, IonLabel,
-    IonHeader, IonToolbar, IonTitle, IonButtons, IonButton,
     NgFor, NgIf,
     OnboardingModalComponent
   ]

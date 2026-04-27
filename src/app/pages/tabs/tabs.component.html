@@ -1,15 +1,4 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>{{ appName() }}</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="toggleDark()" fill="clear" style="--color:#fff;font-size:1.3rem">
-        {{ isDark() ? '☀️' : '🌙' }}
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<!-- Profile Bar -->
+<!-- Profile switcher bar (only visible when multiple profiles exist) -->
 <div class="profile-bar" *ngIf="profiles().length > 1">
   <div
     *ngFor="let p of profiles()"

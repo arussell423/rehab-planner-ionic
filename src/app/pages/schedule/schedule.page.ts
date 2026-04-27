@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonIcon, IonBackButton } from '@ionic/angular/standalone';
 import { ScheduleService } from '../../services/schedule.service';
 import { ProfileService } from '../../services/profile.service';
 import { DayData, DaySchedule } from '../../models';
@@ -15,7 +15,7 @@ import { BodyMapComponent } from '../../components/body-map/body-map.component';
   templateUrl: './schedule.page.html',
   styleUrls: ['./schedule.page.scss'],
   standalone: true,
-  imports: [IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonIcon, NgFor, NgIf, FormsModule, WorkoutSessionComponent, BodyMapComponent]
+  imports: [IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonIcon, IonBackButton, NgFor, NgIf, FormsModule, WorkoutSessionComponent, BodyMapComponent]
 })
 export class SchedulePage implements OnInit {
   private readonly DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];

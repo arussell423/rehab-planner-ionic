@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle } from '@ionic/angular/standalone';
+import { IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonBackButton } from '@ionic/angular/standalone';
 import { ScheduleService } from '../../services/schedule.service';
 import { DaySchedule } from '../../models';
 import { TEMPLATES } from '../../constants';
@@ -11,7 +11,7 @@ import { TEMPLATES } from '../../constants';
   templateUrl: './edit.page.html',
   styleUrls: ['./edit.page.scss'],
   standalone: true,
-  imports: [IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle, NgFor, NgIf, FormsModule]
+  imports: [IonContent, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonBackButton, NgFor, NgIf, FormsModule]
 })
 export class EditPage implements OnInit {
   schedule = signal<DaySchedule[]>([]);
